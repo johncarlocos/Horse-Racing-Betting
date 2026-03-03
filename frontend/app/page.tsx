@@ -25,9 +25,9 @@ export default function Home() {
 
       <main className="bg-black">
         <div className="relative mx-auto w-[1440px] overflow-visible">
-          <div className="grid h-[700px] w-full gap-12 border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.9)] lg:grid-cols-[0.72fr_1.85fr] rounded-b-[32px]">
+          <div className="grid h-[700px] w-full gap-12 border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.9)] lg:grid-cols-[1fr_1000px] rounded-b-[32px]">
             <section className="flex flex-col justify-center gap-5 mt-28">
-            <h1 className="text-[56px] leading-[1.4] font-medium tracking-[0]">
+            <h1 className="whitespace-nowrap text-[56px] leading-[1.4] font-medium tracking-[0]">
               Paddock Horse Racing
             </h1>
 
@@ -58,7 +58,7 @@ export default function Home() {
                   <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">
                     15
                   </span>
-                  <span className="font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-[#707687]">
+                  <span className="whitespace-nowrap font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-[#707687]">
                     LIVE RACES TODAY
                   </span>
                 </div>
@@ -66,7 +66,7 @@ export default function Home() {
                   <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">
                     88.3%
                   </span>
-                  <span className="font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-[#707687]">
+                  <span className="whitespace-nowrap font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-[#707687]">
                     MODEL PREDICTION ACCURACY
                   </span>
                 </div>
