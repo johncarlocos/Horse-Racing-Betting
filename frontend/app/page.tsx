@@ -46,8 +46,8 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="relative z-10 flex flex-col justify-start gap-5 order-1 px-4 pt-[30vh] min-h-[560px] pb-10 lg:justify-center lg:pt-0 lg:px-0 lg:min-h-0 lg:pb-0">
-            <h1 className="text-[32px] leading-[1.2] font-medium tracking-[0] text-white lg:text-[56px] lg:leading-[1.4] lg:whitespace-nowrap">
+            <section className="relative z-10 flex flex-col justify-end gap-5 order-1 px-4 pt-20 min-h-[560px] pb-10 lg:justify-center lg:pt-0 lg:px-0 lg:min-h-0 lg:pb-0">
+            <h1 className="text-[50px] leading-[1.2] font-medium tracking-[0] text-white lg:text-[56px] lg:leading-[1.4] lg:whitespace-nowrap">
               Paddock
               <br className="lg:hidden" />
               Horse Racing
@@ -128,8 +128,8 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Mobile-only: key metrics section (black gradient, two columns, centered) */}
-      <section className="lg:hidden w-full py-8 px-4" style={{ background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 50%, #000000 100%)' }}>
+      {/* Mobile-only: key metrics section (black gradient, extends to bottom) */}
+      <section className="lg:hidden w-full pt-8 pb-24 px-4" style={{ background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 50%, #000000 100%)' }}>
         <div className="grid grid-cols-2 gap-4 max-w-[1360px] mx-auto">
           <div className="flex flex-col items-center justify-center gap-1 text-center">
             <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">
