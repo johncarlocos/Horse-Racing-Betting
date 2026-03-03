@@ -7,7 +7,9 @@ import { useState } from "react";
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-black">
@@ -108,6 +110,39 @@ export default function SignUpPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0 top-1/2 -translate-y-1/2 p-2 transition-colors"
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  <Image
+                    src="/assets/eye.png"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="invert opacity-90"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block font-inter text-[14px] font-medium text-[#B3B3B3] mb-2"
+              >
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm Password"
+                  className="w-full bg-transparent border-0 border-b border-[#3B3B3B] px-0 py-3 pr-10 text-white placeholder:text-[#707687] font-inter text-[16px] focus:outline-none focus:border-[#28E88E] transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 p-2 transition-colors"
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                 >
                   <Image
                     src="/assets/eye.png"
