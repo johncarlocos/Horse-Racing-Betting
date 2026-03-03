@@ -212,6 +212,81 @@ export default function Home() {
           </div>
         </article>
       </section>
+
+      {/* Visual Analytics */}
+      <section className="mx-auto mt-[80px] w-[1360px] px-5">
+        <div className="text-center">
+          <h2 className="text-[40px] font-medium leading-[1.3] tracking-[0] text-white">
+            Visual Analytics
+          </h2>
+          <p className="mx-auto mt-3 max-w-[640px] font-inter text-[16px] font-light leading-[1.5] text-white/90">
+            Powerful visuals transform raw racing data into patterns you can read at a glance and act on with confidence.
+          </p>
+        </div>
+        <div className="mt-12 grid grid-cols-3 gap-6">
+          {/* Seasonal Heatmaps */}
+          <article className="overflow-hidden rounded-[12px] border border-[#3B3B3B] bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.05)_100%)] shadow-[-20px_24px_74px_rgba(255,255,255,0.05)]">
+            <div className="relative h-[240px] w-full rounded-t-lg">
+              <Image src="/assets/Frame1.png" alt="Seasonal Heatmaps" fill className="object-cover" />
+            </div>
+            <div className="p-6">
+              <h3 className="text-[20px] font-semibold leading-[1.3] text-white">Seasonal Heatmaps</h3>
+              <p className="mt-2 font-inter text-[14px] leading-[1.5] text-[#D3D3D3]">
+                Identify performance trends across seasons, distances, and track conditions to spot long-term advantages.
+              </p>
+            </div>
+          </article>
+
+          {/* Market Activity */}
+          <article className="overflow-hidden rounded-[12px] border border-[#3B3B3B] bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.05)_100%)] shadow-[-20px_24px_74px_rgba(255,255,255,0.05)]">
+            <div className="relative h-[240px] w-full rounded-t-lg">
+              <Image src="/assets/Frame2.png" alt="Market Activity" fill className="object-cover" />
+            </div>
+            <div className="p-6">
+              <h3 className="text-[20px] font-semibold leading-[1.3] text-white">Market Activity</h3>
+              <p className="mt-2 font-inter text-[14px] leading-[1.5] text-[#D3D3D3]">
+                Monitor odds fluctuations and betting momentum in real time to understand market confidence and value shifts.
+              </p>
+            </div>
+          </article>
+
+          {/* Pedigree Radar Analysis */}
+          <article className="overflow-hidden rounded-[12px] border border-[#3B3B3B] bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.05)_100%)] shadow-[-20px_24px_74px_rgba(255,255,255,0.05)]">
+            <div className="relative h-[240px] w-full rounded-t-lg">
+              <Image src="/assets/Frame3.png" alt="Pedigree Radar Analysis" fill className="object-cover" />
+            </div>
+            <div className="p-6">
+              <h3 className="text-[20px] font-semibold leading-[1.3] text-white">Pedigree Radar Analysis</h3>
+              <p className="mt-2 font-inter text-[14px] leading-[1.5] text-[#D3D3D3]">
+                Visualize bloodline strengths and weaknesses to assess suitability for distance, surface, and conditions.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* Connect With Digital Paddock */}
+      <section className="mx-auto mt-[80px] w-[1360px] px-5 pb-16">
+        <h2 className="text-[32px] font-medium leading-[1.3] text-white">
+          Connect With Digital Paddock
+        </h2>
+        <p className="mt-3 max-w-[560px] font-inter text-[16px] font-light leading-[1.5] text-white/90">
+          Need help or have questions about the platform? Our team is here to support your racing analytics journey.
+        </p>
+        <a
+          href="mailto:support@digitalpaddock.ai"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#2d2d2d] px-6 py-3 font-inter text-[16px] font-medium text-[#eab308] no-underline transition hover:bg-[#3a3a3a]"
+        >
+          support@digitalpaddock.ai
+          <span className="text-[#eab308]" aria-hidden>↗</span>
+        </a>
+      </section>
+
+      {/* Footer */}
+      <footer className="mx-auto flex w-[1360px] items-center justify-between border-t border-[#3B3B3B] px-5 py-6">
+        <span className="font-inter text-[14px] text-[#707687]">Digital Paddock</span>
+        <span className="font-inter text-[14px] text-[#707687]">Precision Racing Intelligence Powered by Data</span>
+      </footer>
     </div>
   );
 }
