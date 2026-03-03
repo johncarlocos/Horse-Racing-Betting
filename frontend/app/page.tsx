@@ -18,7 +18,7 @@ export default function Home() {
             </div>
             <span className="inline-flex items-baseline gap-1 text-[22px] font-medium leading-[1.4]">
               <span className="text-white">Go</span>
-              <span className="text-[#fbbf24] underline decoration-orange-400/70 decoration-2 underline-offset-1">Racing</span>
+              <span className="text-[#fbbf24]  decoration-orange-400/70 decoration-2 underline-offset-1">Racing</span>
             </span>
           </Link>
         </div>
