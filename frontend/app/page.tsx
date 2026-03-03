@@ -23,9 +23,10 @@ export default function Home() {
         </div>
       </header>
 
-      <main className=" bg-black">
-        <div className="grid h-[527px] w-[1440px] mx-auto gap-12 border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.9)] lg:grid-cols-[1.2fr_1.4fr] rounded-b-[32px]">
-          <section className="flex flex-col justify-center gap-5 mt-28">
+      <main className="bg-black">
+        <div className="relative mx-auto w-[1440px] overflow-visible">
+          <div className="grid h-[700px] w-full gap-12 border border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.9)] lg:grid-cols-[0.72fr_1.85fr] rounded-b-[32px]">
+            <section className="flex flex-col justify-center gap-5 mt-28">
             <h1 className="text-[56px] leading-[1.4] font-medium tracking-[0]">
               Paddock Horse Racing
             </h1>
@@ -73,19 +74,48 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="flex justify-end">
-            <div className="relative w-full overflow-hidden ">
+          <section className="relative flex justify-end overflow-visible">
+            <div className="relative h-full w-full overflow-hidden">
               <Image
                 src="/assets/hero-image.png"
                 alt="Horse racing"
                 width={1066}
-                height={1000}
-                className="h-full w-full object-cover"
+                height={1200}
+                className="h-full w-full object-cover [transform:rotateY(180deg)]"
                 priority
               />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(5,6,8,0.98)_0%,rgba(5,6,8,0.8)_22%,rgba(5,6,8,0)_55%)]" />
+              <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(5,6,8,0.98)_0%,rgba(5,6,8,0.8)_22%,rgba(5,6,8,0)_55%)]" />
             </div>
+            {/* Ellipse 1885 – upper diagonal from center line, up and right */}
+            <div
+              className="pointer-events-none absolute z-10 rounded-full"
+              style={{
+                width: "600px",
+                height: "50px",
+                left: "0",
+                top: "-50px",
+                background: "rgba(255, 255, 255, 0.8)",
+                filter: "blur(50px)",
+                transform: "rotate(-43deg)",
+              }}
+              aria-hidden
+            />
+            {/* Ellipse 1883 – lower diagonal from center line, down and right */}
+            <div
+              className="pointer-events-none absolute z-10 rounded-full"
+              style={{
+                width: "1529.22px",
+                height: "50px",
+                left: "-100px",
+                top: "-100px",
+                background: "rgba(255, 255, 255, 0.8)",
+                filter: "blur(50px)",
+                transform: "rotate(-43.32deg)",
+              }}
+              aria-hidden
+            />
           </section>
+          </div>
         </div>
       </main>
 
