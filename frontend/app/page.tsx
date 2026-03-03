@@ -18,7 +18,7 @@ export default function Home() {
             </div>
             <span className="inline-flex items-baseline gap-1 text-[22px] font-medium leading-[1.4]">
               <span className="text-white">Go</span>
-              <span className="text-[#fbbf24]">Racing</span>
+              <span className="text-[#fbbf24] underline decoration-orange-400/70 decoration-2 underline-offset-1">Racing</span>
             </span>
           </Link>
         </div>
@@ -26,8 +26,8 @@ export default function Home() {
 
       <main className="bg-black">
         <div className="relative mx-auto w-full max-w-[1440px] overflow-visible px-0 lg:px-8">
-          {/* Hero: on mobile full-bleed image as background with content overlaid; on lg two-column grid */}
-          <div className="relative grid min-h-[560px] lg:min-h-0 h-auto lg:h-[700px] w-full gap-8 lg:gap-12 border-t-0 lg:border-t border-r border-b border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.9)] grid-cols-1 lg:grid-cols-[1fr_1000px] rounded-b-none lg:rounded-b-[32px] py-0 lg:py-0">
+          {/* Hero: on mobile image to ~middle of screen, content overlaid on lower portion; on lg two-column grid (Screenshot 2) */}
+          <div className="relative grid min-h-[55vh] lg:min-h-0 h-auto lg:h-[700px] w-full gap-8 lg:gap-12 border-t-0 lg:border-t border-r border-b border-white/10 shadow-[0_32px_80px_rgba(0,0,0,0.9)] grid-cols-1 lg:grid-cols-[1fr_1000px] rounded-b-none lg:rounded-b-[32px] py-0 lg:py-0">
             {/* Hero image: on mobile absolute background, on lg in flow */}
             <section className="absolute inset-0 lg:relative lg:flex justify-end overflow-visible order-2 min-h-0">
               <div className="relative h-full w-full overflow-hidden rounded-b-none lg:rounded-b-[32px]">
@@ -46,7 +46,7 @@ export default function Home() {
               </div>
             </section>
 
-            <section className="relative z-10 flex flex-col justify-end gap-5 order-1 px-4 pt-20 min-h-[560px] pb-10 lg:justify-center lg:pt-0 lg:px-0 lg:min-h-0 lg:pb-0">
+            <section className="relative z-10 flex flex-col justify-end gap-5 order-1 px-4 pt-[38vh] min-h-[55vh] pb-6 lg:justify-center lg:pt-0 lg:px-0 lg:min-h-0 lg:pb-0">
             <h1 className="text-[50px] leading-[1.2] font-medium tracking-[0] text-white lg:text-[56px] lg:leading-[1.4] lg:whitespace-nowrap">
               Paddock
               <br className="lg:hidden" />
@@ -128,8 +128,8 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Mobile-only: key metrics section (black gradient, extends to bottom) */}
-      <section className="lg:hidden w-full pt-8 pb-24 px-4" style={{ background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 50%, #000000 100%)' }}>
+      {/* Mobile-only: stats section – dark background starts below hero (Screenshot 2) */}
+      <section className="lg:hidden w-full pt-5 pb-24 px-4" style={{ background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 50%, #000000 100%)' }}>
         <div className="grid grid-cols-2 gap-4 max-w-[1360px] mx-auto">
           <div className="flex flex-col items-center justify-center gap-1 text-center">
             <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">
