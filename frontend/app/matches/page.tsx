@@ -171,7 +171,7 @@ export default function MatchesPage() {
                   {MOCK_LEADERBOARD.map((row) => (
                     <div
                       key={row.position}
-                      className={`rounded-lg sm:rounded-xl bg-[#1e1e1e] p-3 sm:p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5 min-w-0 ${HORSE_BOX_LEFT_OFFSET[row.position]}`}
+                      className={`w-[250px] rounded-lg sm:rounded-xl bg-[#1e1e1e] p-3 sm:p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5 min-w-0 ${HORSE_BOX_LEFT_OFFSET[row.position]}`}
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-[10px]">
                         <span
