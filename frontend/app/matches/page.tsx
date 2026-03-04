@@ -221,20 +221,28 @@ export default function MatchesPage() {
                       key={row.position}
                       className="rounded-xl bg-[#1e1e1e] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5"
                     >
-                      <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center justify-between gap-[10px]">
                         <span
-                          className={`inline-flex h-7 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2.5 font-inter text-xs font-semibold ${POSITION_STYLES[row.position]}`}
+                          className={`inline-flex h-[28px] min-w-[30px] shrink-0 items-center justify-center rounded-[8px] py-2 px-2.5 font-inter text-xs font-medium ${POSITION_STYLES[row.position]}`}
                         >
                           {row.position}
                           {row.position === 1 ? "st" : row.position === 2 ? "nd" : row.position === 3 ? "rd" : "th"}
                         </span>
                         <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                          <span className="font-inter text-base font-bold text-white leading-tight">{row.horse}</span>
-                          <p className="font-inter text-xs text-[#A0A0A0] leading-tight whitespace-nowrap">{row.highlight}</p>
+                          <span className="font-sans font-medium text-[18px] leading-[1.3] text-white">
+                            {row.horse}
+                          </span>
+                          <p className="font-inter font-normal text-[12px] leading-[1.3] text-[#FFFFFF80] whitespace-nowrap">
+                            {row.highlight}
+                          </p>
                         </div>
                         <div className="shrink-0 text-right">
-                          <p className="font-inter text-xs text-[#A0A0A0] leading-tight">Win Rate</p>
-                          <p className="font-inter text-base font-bold text-[#32CD32] leading-tight">{row.winRate}</p>
+                          <p className="font-inter font-light text-[14px] leading-[1.4] tracking-[0.01em] text-[#B3B3B3]">
+                            Win Rate
+                          </p>
+                          <p className="font-inter font-medium text-[14px] leading-[1.5] tracking-[0.01em] text-[#28E88E]">
+                            {row.winRate}
+                          </p>
                         </div>
                       </div>
                     </div>
