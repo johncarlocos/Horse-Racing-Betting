@@ -1,14 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthFormLayout, PasswordField, TextField } from "@/components/auth";
 import { PrimaryButton } from "@/components/ui";
 import { COPY, ROUTES } from "@/lib/constants";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Frontend-only: redirect to race list. Backend auth later.
+    router.push(ROUTES.MATCHES);
+  };
 
   return (
     <AuthFormLayout>
@@ -21,7 +29,7 @@ export default function LoginPage() {
 
       <form
         className="flex flex-col gap-6"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
         <TextField
           id="email"
