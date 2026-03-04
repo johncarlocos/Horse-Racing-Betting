@@ -144,7 +144,12 @@ export default function MatchesPage() {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    className="shrink-0 rounded-lg border border-white/25 bg-[#252525] px-4 py-2 font-inter text-sm font-medium text-white transition hover:bg-[#2d2d2d]"
+                    className="shrink-0 rounded-[44px] border border-white font-inter text-sm font-medium text-white transition hover:opacity-90"
+                    style={{
+                      padding: "11px 32px",
+                      background:
+                        "radial-gradient(44.33% 44.33% at 50.2% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)",
+                    }}
                   >
                     View Analysis
                   </button>
@@ -154,12 +159,13 @@ export default function MatchesPage() {
               {/* Two-column: race path (left) + leaderboard cards (right) with connector lines */}
               <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[320px]">
                 {/* Left: Race path with horses */}
-                <div className="relative min-h-[240px] lg:min-h-[320px] rounded-xl overflow-hidden bg-black">
+                <div className="relative min-h-[240px] lg:min-h-[320px] rounded-xl overflow-hidden">
                   <Image
                     src={RACE_VECTOR}
                     alt="Race track"
-                    fill
-                    className="object-contain object-center py-4"
+                    width={260}
+                    height={450}
+                    className="object-contain object-center"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 </div>
