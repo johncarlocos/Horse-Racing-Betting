@@ -141,7 +141,7 @@ export default function MatchesPage() {
               </div>
 
               {/* Mobile: path left (narrow) + horse boxes right. LG: same 2-col, path larger. items-start keeps horse box column from stretching. */}
-              <div className="relative grid grid-cols-2 gap-0 items-start">
+              <div className="relative grid grid-cols-2 gap-0 items-center">
                 {/* Left: Race path — narrow strip on mobile, full column on lg; taller image, horse boxes stay content height */}
                 <div className="">
                   <Image
