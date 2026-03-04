@@ -127,63 +127,93 @@ export default function MatchesPage() {
           {/* Left: Race detail + track + leaderboard */}
           <div className="xl:col-span-1 space-y-6">
             <article className="rounded-2xl border border-white/10 bg-[#1a1a1a] p-5 sm:p-6 shadow-xl">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <div className="relative h-10 w-10 shrink-0">
                     <Image src={RACE_HORSE} alt="" width={40} height={40} className="object-contain" />
                   </div>
-                  <h2 className="font-inter text-xl font-semibold text-white">
-                    New Alley
-                  </h2>
+                  <div>
+                    <h2 className="font-inter text-xl font-bold text-white">
+                      New Alley
+                    </h2>
+                    <p className="font-inter text-sm text-white/60 mt-0.5">
+                      Match 1 | 23 Riders
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <p className="font-inter text-sm text-white/70">
-                    Match 1 | 23 Riders
-                  </p>
                   <button
                     type="button"
-                    className="shrink-0 rounded-lg border-2 border-[#374151] bg-white px-4 py-2 font-inter text-sm font-medium text-black transition hover:bg-gray-100"
+                    className="shrink-0 rounded-lg border border-white/25 bg-[#252525] px-4 py-2 font-inter text-sm font-medium text-white transition hover:bg-[#2d2d2d]"
                   >
                     View Analysis
                   </button>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
-                {/* Race path with horses */}
-                <div className="relative flex-1 min-h-[200px] lg:min-h-[280px] rounded-xl overflow-hidden bg-black/40">
+              {/* Two-column: race path (left) + leaderboard cards (right) with connector lines */}
+              <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[320px]">
+                {/* Left: Race path with horses */}
+                <div className="relative min-h-[240px] lg:min-h-[320px] rounded-xl overflow-hidden bg-black">
                   <Image
                     src={RACE_VECTOR}
                     alt="Race track"
                     fill
                     className="object-contain object-center py-4"
-                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
-                  
                 </div>
 
-                {/* Leaderboard (screen1: horse icon beside each rank) */}
-                <div className="w-full lg:w-[200px] shrink-0 space-y-3">
-                  <h3 className="font-inter text-sm font-semibold text-white/90">Leaderboard</h3>
+                {/* Right: Leaderboard cards — aligned with path, equal height */}
+                <div className="flex flex-col justify-evenly gap-3 py-2 lg:py-4">
                   {MOCK_LEADERBOARD.map((row) => (
                     <div
                       key={row.position}
-                      className="flex flex-col gap-1 rounded-lg border border-white/10 bg-white/5 p-3"
+                      className={`rounded-xl border p-3.5 shadow-lg transition ${
+                        row.position === 1
+                          ? "border-amber-500/40 bg-[#252525] shadow-amber-500/10"
+                          : "border-white/10 bg-[#1f1f1f] shadow-black/30"
+                      }`}
                     >
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`inline-flex h-6 min-w-[2.5rem] items-center justify-center rounded px-2 font-inter text-xs font-bold ${POSITION_STYLES[row.position]}`}
-                        >
-                          {row.position}
-                          {row.position === 1 ? "st" : row.position === 2 ? "nd" : row.position === 3 ? "rd" : "th"}
-                        </span>
-                        <span className="font-inter text-sm font-medium text-white">{row.horse}</span>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`inline-flex h-6 min-w-[2.5rem] shrink-0 items-center justify-center rounded-md px-2 font-inter text-xs font-bold ${POSITION_STYLES[row.position]}`}
+                            >
+                              {row.position}
+                              {row.position === 1 ? "st" : row.position === 2 ? "nd" : row.position === 3 ? "rd" : "th"}
+                            </span>
+                            <span className="font-inter text-sm font-semibold text-white truncate">{row.horse}</span>
+                          </div>
+                          <p className="font-inter text-xs text-white/60">{row.highlight}</p>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <p className="font-inter text-xs text-white/60">Win Rate</p>
+                          <p className="font-inter text-sm font-semibold text-[#28E88E]">{row.winRate}</p>
+                        </div>
                       </div>
-                      <p className="font-inter text-xs text-white/60">{row.highlight}</p>
-                      <p className="font-inter text-sm font-semibold text-[#28E88E]">Win Rate {row.winRate}</p>
                     </div>
                   ))}
                 </div>
+
+                {/* Connector lines: path → cards (visible on lg) */}
+                <svg
+                  className="absolute inset-0 pointer-events-none hidden lg:block"
+                  aria-hidden
+                >
+                  {[18, 41, 64, 87].map((pct) => (
+                    <line
+                      key={pct}
+                      x1="45%"
+                      y1={`${pct}%`}
+                      x2="50%"
+                      y2={`${pct}%`}
+                      stroke="rgba(255,255,255,0.2)"
+                      strokeWidth="1"
+                    />
+                  ))}
+                </svg>
               </div>
             </article>
           </div>
