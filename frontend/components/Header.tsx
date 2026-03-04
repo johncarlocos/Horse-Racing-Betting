@@ -38,9 +38,11 @@ export function Header({ variant = "default" }: { variant?: HeaderVariant }) {
               />
             </svg>
             <span
-              className="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-500 ring-2 ring-black/95"
+              className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-medium text-white ring-2 ring-black/95"
               aria-hidden
-            />
+            >
+              2
+            </span>
           </button>
           {/* Profile avatar with dropdown chevron */}
           <button

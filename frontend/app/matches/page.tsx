@@ -41,12 +41,12 @@ const POSITION_STYLES: Record<number, string> = {
   4: "bg-[#8B5CF6] text-white",
 };
 
-/** Per-box left offset (lg) so each horse box aligns differently toward the track */
+/** Per-box left offset (lg only) so each horse box aligns differently toward the track */
 const HORSE_BOX_LEFT_OFFSET: Record<number, string> = {
-  1: "lg:-ml-20 lg: mr-20",
-  2: "lg:-ml-12  lg: mr-12",
-  3: "lg:-ml-8  lg: mr-8",
-  4: "lg:-ml-20  lg: mr-20",
+  1: "lg:-ml-20 lg:mr-20",
+  2: "lg:-ml-12 lg:mr-12",
+  3: "lg:-ml-8 lg:mr-8",
+  4: "lg:-ml-20 lg:mr-20",
 };
 
 // Screen1: #Hamper89 red down, #Rambo89 green up
@@ -62,25 +62,25 @@ export default function MatchesPage() {
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
-      <main className="mx-auto max-w-[1600px] space-y-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        {/* Match cards strip */}
-        <section className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex gap-4 min-w-max sm:min-w-0 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+      <main className="mx-auto w-full max-w-[1600px] space-y-4 sm:space-y-6 px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+        {/* Match cards: horizontal scroll on mobile, green gradient when selected */}
+        <section className="overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 scroll-smooth">
+          <div className="flex gap-3 sm:gap-4 min-w-max sm:min-w-0 sm:grid sm:grid-cols-2 lg:grid-cols-4">
             {MOCK_MATCHES.map((m) => (
               <button
                 type="button"
                 key={m.id}
                 onClick={() => setSelectedMatchId(m.id)}
-                className={`w-[280px] shrink-0 rounded-xl border border-white/10 p-4 sm:w-auto text-left transition-all  ${
+                className={`w-[260px] min-w-[260px] shrink-0 rounded-xl border p-3 sm:w-auto sm:min-w-0 sm:p-4 text-left transition-all ${
                   selectedMatchId === m.id
-                    ? "bg-[#252525] shadow-[0px_34px_74px_0px_#00000052]"
-                    : "bg-[#1a1a1a] hover:bg-[#1f1f1f]"
+                    ? "border-[#28E88E]/40 bg-gradient-to-br from-[#1a3328] via-[#1e3d2e] to-[#152a22] shadow-[0px_34px_74px_0px_#00000052] lg:border-white/10 lg:bg-[#252525] lg:from-[#252525] lg:via-[#252525] lg:to-[#252525]"
+                    : "border-white/10 bg-[#1a1a1a] hover:bg-[#1f1f1f]"
                 }`}
               >
-                <h3 className="font-inter text-base font-semibold text-white mb-3">
+                <h3 className="font-inter text-sm sm:text-base font-semibold text-white mb-2 sm:mb-3">
                   Match {m.id}: {m.name}
                 </h3>
-                <dl className="space-y-1.5 font-inter text-sm">
+                <dl className="space-y-1 sm:space-y-1.5 font-inter text-xs sm:text-sm">
                   <div className="flex justify-between gap-2">
                     <span className="text-white/60">Front-runner bias</span>
                     <span className={m.frontRunnerBias === "Detected" ? "text-red-400" : "text-white/80"}>{m.frontRunnerBias}</span>
@@ -107,31 +107,30 @@ export default function MatchesPage() {
           </div>
         </section>
 
-        {/* Race detail + Leaderboard + Live Odds */}
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        {/* Race detail + Leaderboard + Live Odds: stacked on mobile/tablet, 1+2 cols on xl */}
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-3">
           {/* Left: Race detail + track + leaderboard */}
-          <div className="xl:col-span-1 space-y-6">
-            <article className="rounded-2xl border border-white/10 bg-[#1a1a1a] p-5 sm:p-6 shadow-xl">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="relative h-10 w-10 shrink-0">
-                    <Image src={RACE_HORSE} alt="" width={40} height={40} className="object-contain" />
+          <div className="xl:col-span-1 space-y-4 sm:space-y-6 min-w-0">
+            <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6 shadow-xl min-w-0">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <div className="relative h-9 w-9 sm:h-10 sm:w-10 shrink-0">
+                    <Image src={RACE_HORSE} alt="" width={40} height={40} className="object-contain h-9 w-9 sm:h-10 sm:w-10" />
                   </div>
-                  <div>
-                    <h2 className="font-inter text-xl font-bold text-white">
+                  <div className="min-w-0">
+                    <h2 className="font-inter text-lg sm:text-xl font-bold text-white truncate">
                       New Alley
                     </h2>
-                    <p className="font-inter text-sm text-white/60 mt-0.5">
+                    <p className="font-inter text-xs sm:text-sm text-white/60 mt-0.5">
                       Match 1 | 23 Riders
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                   <button
                     type="button"
-                    className="shrink-0 rounded-[44px] border border-white font-inter text-sm font-medium text-white transition hover:opacity-90"
+                    className="shrink-0 rounded-[44px] border border-white font-inter text-xs sm:text-sm font-medium text-white transition hover:opacity-90 py-2 px-4 sm:py-[11px] sm:px-8"
                     style={{
-                      padding: "11px 32px",
                       background:
                         "radial-gradient(44.33% 44.33% at 50.2% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)",
                     }}
@@ -141,87 +140,60 @@ export default function MatchesPage() {
                 </div>
               </div>
 
-              {/* Two-column: race path (left) + leaderboard cards (right) with connector lines */}
-              <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[320px]">
-                {/* Left: Race path with horses */}
-                <div className="relative min-h-[240px] lg:min-h-[320px] rounded-xl overflow-hidden">
-                  <div>
-                    <Image
-                      src={RACE_VECTOR}
-                      alt="Race track"
-                      width={260}
-                      height={450}
-                      className="object-contain object-center"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
+              {/* Mobile: path left (narrow) + horse boxes right. LG: same 2-col, path larger */}
+              <div className="relative grid grid-cols-[72px_1fr] sm:grid-cols-[100px_1fr] lg:grid-cols-2 gap-0 min-h-[200px] sm:min-h-[280px] lg:min-h-[320px]">
+                {/* Left: Race path — narrow strip on mobile, full column on lg */}
+                <div className="relative min-h-[200px] sm:min-h-[280px] lg:min-h-[320px] rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center lg:block">
+                  <Image
+                    src={RACE_VECTOR}
+                    alt="Race track"
+                    width={260}
+                    height={450}
+                    className="object-contain object-center w-full h-full min-h-[200px] sm:min-h-[280px] lg:min-h-[320px] max-h-[200px] sm:max-h-[280px] lg:max-h-[320px]"
+                    sizes="(max-width: 640px) 72px, (max-width: 1024px) 100px, 50vw"
+                  />
+                  {/* Connector bars: only on lg when side-by-side layout */}
+                  <div className="absolute top-[60px] left-[60px] hidden lg:block pointer-events-none">
+                    <Image src={RACE_BAR1} alt="" width={70} height={20} className="object-contain" />
                   </div>
-                  
-                  {/* Connector lines: path → cards (visible on lg) */}
-                  <div className="absolute top-[60px] left-[60px]">
-                    <Image
-                      src={RACE_BAR1}
-                      alt="Race Bar1"
-                      width={70}
-                      height={20}
-                      className="object-contain object-center"
-                    />
+                  <div className="absolute top-[145px] left-[130px] hidden lg:block pointer-events-none">
+                    <Image src={RACE_BAR2} alt="" width={30} height={20} className="object-contain" />
                   </div>
-                  <div className="absolute top-[145px] left-[130px]">
-                    <Image
-                      src={RACE_BAR2}
-                      alt="Race Bar2"
-                      width={30}
-                      height={20}
-                      className="object-contain object-center"
-                    />
+                  <div className="absolute top-[230px] left-[150px] hidden lg:block pointer-events-none">
+                    <Image src={RACE_BAR3} alt="" width={30} height={20} className="object-contain" />
                   </div>
-                  <div className="absolute top-[230px] left-[150px]">
-                    <Image
-                      src={RACE_BAR3}
-                      alt="Race Bar3"
-                      width={30}
-                      height={20}
-                      className="object-contain object-center"
-                    />
-                  </div>
-                  <div className="absolute top-[315px] left-[100px]">
-                    <Image
-                      src={RACE_BAR4}
-                      alt="Race Bar4"
-                      width={30}
-                      height={20}
-                      className="object-contain object-center"
-                    />
+                  <div className="absolute top-[315px] left-[100px] hidden lg:block pointer-events-none">
+                    <Image src={RACE_BAR4} alt="" width={30} height={20} className="object-contain" />
                   </div>
                 </div>
 
-                {/* Right: Leaderboard cards — aligned with path, equal height */}
-                <div className="flex flex-col justify-evenly gap-3 py-2 lg:py-4">
+                {/* Right: Horse boxes — full height on mobile, compact spacing */}
+                <div className="flex flex-col justify-evenly gap-2 sm:gap-3 py-2 sm:py-3 lg:py-4 min-w-0">
                   {MOCK_LEADERBOARD.map((row) => (
                     <div
                       key={row.position}
-                      className={`rounded-xl bg-[#1e1e1e] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5 ${HORSE_BOX_LEFT_OFFSET[row.position]}`}
+                      className={`rounded-lg sm:rounded-xl bg-[#1e1e1e] p-3 sm:p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5 min-w-0 ${HORSE_BOX_LEFT_OFFSET[row.position]}`}
                     >
-                      <div className="flex items-center justify-between gap-[10px]">
+                      <div className="flex items-center justify-between gap-2 sm:gap-[10px]">
                         <span
-                          className={`inline-flex h-[28px] min-w-[30px] shrink-0 items-center justify-center rounded-[8px] py-2 px-2.5 font-inter text-xs font-medium ${POSITION_STYLES[row.position]}`}
+                          className={`inline-flex h-6 sm:h-[28px] min-w-[26px] sm:min-w-[30px] shrink-0 items-center justify-center rounded-[8px] py-1.5 sm:py-2 px-2 sm:px-2.5 font-inter text-[11px] sm:text-xs font-medium ${POSITION_STYLES[row.position]}`}
                         >
                           {row.position}
                           {row.position === 1 ? "st" : row.position === 2 ? "nd" : row.position === 3 ? "rd" : "th"}
                         </span>
-                        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                          <span className="font-sans font-medium text-[18px] leading-[1.3] text-white">
+                        <div className="flex flex-col gap-0.5 min-w-0 flex-1 overflow-hidden">
+                          <span className="font-sans font-medium text-[15px] sm:text-[18px] leading-[1.3] text-white truncate">
                             {row.horse}
                           </span>
-                          <p className="font-inter font-normal text-[12px] leading-[1.3] text-[#FFFFFF80] whitespace-nowrap">
+                          <p className="font-inter font-normal text-[11px] sm:text-[12px] leading-[1.3] text-[#FFFFFF80] whitespace-nowrap truncate">
                             {row.highlight}
                           </p>
                         </div>
                         <div className="shrink-0 text-right">
-                          <p className="font-inter font-light text-[14px] leading-[1.4] tracking-[0.01em] text-[#B3B3B3]">
+                          <p className="font-inter font-light text-[11px] sm:text-[14px] leading-[1.4] tracking-[0.01em] text-[#B3B3B3]">
                             Win Rate
                           </p>
-                          <p className="font-inter font-medium text-[14px] leading-[1.5] tracking-[0.01em] text-[#28E88E]">
+                          <p className="font-inter font-medium text-[12px] sm:text-[14px] leading-[1.5] tracking-[0.01em] text-[#28E88E]">
                             {row.winRate}
                           </p>
                         </div>
@@ -233,46 +205,46 @@ export default function MatchesPage() {
             </article>
           </div>
 
-          {/* Right: Live Odds Matrix */}
-          <div className="xl:col-span-2">
-            <article className="rounded-2xl border border-white/10 bg-[#1a1a1a] p-5 sm:p-6 shadow-xl h-full">
-              <h2 className="font-inter text-lg font-semibold text-white mb-4">
+          {/* Right: Live Odds Matrix — scrollable table on mobile */}
+          <div className="xl:col-span-2 min-w-0">
+            <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6 shadow-xl h-full min-w-0">
+              <h2 className="font-inter text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">
                 Live Odds Matrix
               </h2>
               <div className="overflow-x-auto -mx-1">
-                <table className="w-full min-w-[420px] font-inter text-sm">
+                <table className="w-full min-w-[360px] sm:min-w-[420px] font-inter text-xs sm:text-sm">
                   <thead>
                     <tr className="border-b border-white/10 text-left text-white/70">
-                      <th className="pb-3 pr-2 font-medium">Horse</th>
-                      <th className="pb-3 pr-2 font-medium">Odds</th>
-                      <th className="pb-3 pr-2 font-medium">Trend</th>
-                      <th className="pb-3 pr-2 font-medium">AI%</th>
-                      <th className="pb-3 pr-2 font-medium">Speed</th>
-                      <th className="pb-3 pr-2 font-medium">EV</th>
-                      <th className="pb-3 font-medium">Action</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">Horse</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">Odds</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">Trend</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">AI%</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">Speed</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">EV</th>
+                      <th className="pb-2 sm:pb-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {MOCK_ODDS.map((row, i) => (
                       <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                        <td className="py-3 pr-2 text-white font-medium">{row.horse}</td>
-                        <td className="py-3 pr-2 text-white">{row.odds}</td>
-                        <td className="py-3 pr-2">
+                        <td className="py-2 sm:py-3 pr-1.5 sm:pr-2 text-white font-medium whitespace-nowrap">{row.horse}</td>
+                        <td className="py-2 sm:py-3 pr-1.5 sm:pr-2 text-white whitespace-nowrap">{row.odds}</td>
+                        <td className="py-2 sm:py-3 pr-1.5 sm:pr-2 whitespace-nowrap">
                           {row.trend === "up" ? (
                             <span className="text-[#28E88E]" aria-label="Up">↑</span>
                           ) : (
                             <span className="text-red-400" aria-label="Down">↓</span>
                           )}
                         </td>
-                        <td className="py-3 pr-2 text-white">{row.ai}</td>
-                        <td className="py-3 pr-2 text-white">{row.speed}</td>
-                        <td className={`py-3 pr-2 font-medium ${row.ev.startsWith("+") ? "text-[#28E88E]" : "text-red-400"}`}>
+                        <td className="py-2 sm:py-3 pr-1.5 sm:pr-2 text-white whitespace-nowrap">{row.ai}</td>
+                        <td className="py-2 sm:py-3 pr-1.5 sm:pr-2 text-white whitespace-nowrap">{row.speed}</td>
+                        <td className={`py-2 sm:py-3 pr-1.5 sm:pr-2 font-medium whitespace-nowrap ${row.ev.startsWith("+") ? "text-[#28E88E]" : "text-red-400"}`}>
                           {row.ev}
                         </td>
-                        <td className="py-3">
+                        <td className="py-2 sm:py-3 whitespace-nowrap">
                           <button
                             type="button"
-                            className="font-medium text-[#28E88E] hover:underline"
+                            className="font-medium text-[#28E88E] hover:underline text-left"
                           >
                             Click Here
                           </button>
