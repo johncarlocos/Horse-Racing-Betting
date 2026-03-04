@@ -140,19 +140,18 @@ export default function MatchesPage() {
                 </div>
               </div>
 
-              {/* Mobile: path left (narrow) + horse boxes right. LG: same 2-col, path larger */}
-              <div className="relative grid grid-cols-[72px_1fr] sm:grid-cols-[100px_1fr] lg:grid-cols-2 gap-0 min-h-[200px] sm:min-h-[280px] lg:min-h-[320px]">
-                {/* Left: Race path — narrow strip on mobile, full column on lg */}
-                <div className="relative min-h-[200px] sm:min-h-[280px] lg:min-h-[320px] rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center lg:block">
+              {/* Mobile: path left (narrow) + horse boxes right. LG: same 2-col, path larger. items-start keeps horse box column from stretching. */}
+              <div className="relative grid sm:grid-cols-[100px_1fr] lg:grid-cols-2 gap-0 items-start">
+                {/* Left: Race path — narrow strip on mobile, full column on lg; taller image, horse boxes stay content height */}
+                <div className="">
                   <Image
                     src={RACE_VECTOR}
                     alt="Race track"
                     width={260}
                     height={450}
-                    className="object-contain object-center w-full h-full min-h-[200px] sm:min-h-[280px] lg:min-h-[320px] max-h-[200px] sm:max-h-[280px] lg:max-h-[320px]"
-                    sizes="(max-width: 640px) 72px, (max-width: 1024px) 100px, 50vw"
+                    className=""
                   />
-                  {/* Connector bars: only on lg when side-by-side layout */}
+                  {/* Connector bars: only on lg when side-by-side layout; positions scaled for taller image */}
                   <div className="absolute top-[60px] left-[60px] hidden lg:block pointer-events-none">
                     <Image src={RACE_BAR1} alt="" width={70} height={20} className="object-contain" />
                   </div>
@@ -167,8 +166,8 @@ export default function MatchesPage() {
                   </div>
                 </div>
 
-                {/* Right: Horse boxes — full height on mobile, compact spacing */}
-                <div className="flex flex-col justify-evenly gap-2 sm:gap-3 py-2 sm:py-3 lg:py-4 min-w-0">
+                {/* Right: Horse boxes — content height only (no stretch); compact spacing */}
+                <div className="flex flex-col gap-2 sm:gap-3 py-2 sm:py-3 lg:py-4 min-w-0">
                   {MOCK_LEADERBOARD.map((row) => (
                     <div
                       key={row.position}
