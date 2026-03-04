@@ -180,7 +180,7 @@ export default function MatchesPage() {
                         </span>
                         <div className="flex flex-col gap-0.5 min-w-0 flex-1">
                           <span className="font-inter text-base font-bold text-white leading-tight">{row.horse}</span>
-                          <p className="font-inter text-xs text-[#A0A0A0] leading-tight">{row.highlight}</p>
+                          <p className="font-inter text-xs text-[#A0A0A0] leading-tight whitespace-nowrap">{row.highlight}</p>
                         </div>
                         <div className="shrink-0 text-right">
                           <p className="font-inter text-xs text-[#A0A0A0] leading-tight">Win Rate</p>
