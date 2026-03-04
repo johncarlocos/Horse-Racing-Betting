@@ -7,6 +7,10 @@ import { ROUTES } from "@/lib/constants";
 
 const RACE_VECTOR = "/assets/race-vector.png";
 const RACE_HORSE = "/assets/race-horse.png";
+const RACE_BAR1 = "/assets/Vector-1.png";
+const RACE_BAR2 = "/assets/Vector-2.png";
+const RACE_BAR3 = "/assets/Vector-3.png";
+const RACE_BAR4 = "/assets/Vector-4.png";
 
 const MOCK_MATCHES = [
   {
@@ -160,14 +164,54 @@ export default function MatchesPage() {
               <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[320px]">
                 {/* Left: Race path with horses */}
                 <div className="relative min-h-[240px] lg:min-h-[320px] rounded-xl overflow-hidden">
-                  <Image
-                    src={RACE_VECTOR}
-                    alt="Race track"
-                    width={260}
-                    height={450}
-                    className="object-contain object-center"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
+                  <div>
+                    <Image
+                      src={RACE_VECTOR}
+                      alt="Race track"
+                      width={260}
+                      height={450}
+                      className="object-contain object-center"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </div>
+                  
+                  {/* Connector lines: path → cards (visible on lg) */}
+                  <div className="absolute top-[60px] left-[60px]">
+                    <Image
+                      src={RACE_BAR1}
+                      alt="Race Bar1"
+                      width={70}
+                      height={20}
+                      className="object-contain object-center"
+                    />
+                  </div>
+                  <div className="absolute top-[145px] left-[130px]">
+                    <Image
+                      src={RACE_BAR2}
+                      alt="Race Bar2"
+                      width={30}
+                      height={20}
+                      className="object-contain object-center"
+                    />
+                  </div>
+                  <div className="absolute top-[230px] left-[150px]">
+                    <Image
+                      src={RACE_BAR3}
+                      alt="Race Bar3"
+                      width={30}
+                      height={20}
+                      className="object-contain object-center"
+                    />
+                  </div>
+                  <div className="absolute top-[315px] left-[100px]">
+                    <Image
+                      src={RACE_BAR4}
+                      alt="Race Bar4"
+                      width={30}
+                      height={20}
+                      className="object-contain object-center"
+                    />
+                  </div>
                 </div>
 
                 {/* Right: Leaderboard cards — aligned with path, equal height */}
@@ -196,24 +240,6 @@ export default function MatchesPage() {
                     </div>
                   ))}
                 </div>
-
-                {/* Connector lines: path → cards (visible on lg) */}
-                <svg
-                  className="absolute inset-0 pointer-events-none hidden lg:block"
-                  aria-hidden
-                >
-                  {[18, 41, 64, 87].map((pct) => (
-                    <line
-                      key={pct}
-                      x1="45%"
-                      y1={`${pct}%`}
-                      x2="50%"
-                      y2={`${pct}%`}
-                      stroke="rgba(255,255,255,0.2)"
-                      strokeWidth="1"
-                    />
-                  ))}
-                </svg>
               </div>
             </article>
           </div>
