@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { Logo } from "@/components/ui";
 import { ROUTES } from "@/lib/constants";
 
@@ -46,6 +47,8 @@ const MOCK_ODDS = [
 ];
 
 export default function MatchesPage() {
+  const [selectedMatchId, setSelectedMatchId] = useState<string>("1");
+
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
       {/* Header */}
@@ -79,10 +82,14 @@ export default function MatchesPage() {
         <section className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
           <div className="flex gap-4 min-w-max sm:min-w-0 sm:grid sm:grid-cols-2 lg:grid-cols-4">
             {MOCK_MATCHES.map((m) => (
-              <article
+              <button
+                type="button"
                 key={m.id}
-                className={`w-[280px] shrink-0 rounded-xl border border-white/10 p-4 shadow-lg sm:w-auto ${
-                  m.id === "1" ? "border-t-4 border-t-[#28E88E] bg-[#252525]" : "bg-[#1a1a1a]"
+                onClick={() => setSelectedMatchId(m.id)}
+                className={`w-[280px] shrink-0 rounded-xl border border-white/10 p-4 sm:w-auto text-left transition-all  ${
+                  selectedMatchId === m.id
+                    ? "bg-[#252525] shadow-[0px_34px_74px_0px_#00000052]"
+                    : "bg-[#1a1a1a] hover:bg-[#1f1f1f]"
                 }`}
               >
                 <h3 className="font-inter text-base font-semibold text-white mb-3">
@@ -110,7 +117,7 @@ export default function MatchesPage() {
                     <span className="text-white">{m.duration}</span>
                   </div>
                 </dl>
-              </article>
+              </button>
             ))}
           </div>
         </section>
@@ -164,9 +171,6 @@ export default function MatchesPage() {
                       className="flex flex-col gap-1 rounded-lg border border-white/10 bg-white/5 p-3"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="relative h-5 w-5 shrink-0">
-                          <Image src={RACE_HORSE} alt="" width={20} height={20} className="object-contain" />
-                        </div>
                         <span
                           className={`inline-flex h-6 min-w-[2.5rem] items-center justify-center rounded px-2 font-inter text-xs font-bold ${POSITION_STYLES[row.position]}`}
                         >
