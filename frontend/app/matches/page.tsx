@@ -43,10 +43,10 @@ const POSITION_STYLES: Record<number, string> = {
 
 /** Per-box left offset (lg only) so each horse box aligns differently toward the track */
 const HORSE_BOX_LEFT_OFFSET: Record<number, string> = {
-  1: "lg:-ml-20 lg:mr-20",
-  2: "lg:-ml-12 lg:mr-12",
-  3: "lg:-ml-8 lg:mr-8",
-  4: "lg:-ml-20 lg:mr-20",
+  1: "lg:-ml-20",
+  2: "lg:-ml-12",
+  3: "lg:-ml-8",
+  4: "lg:-ml-20",
 };
 
 // Screen1: #Hamper89 red down, #Rambo89 green up
@@ -152,16 +152,16 @@ export default function MatchesPage() {
                     className=""
                   />
                   {/* Connector bars: only on lg when side-by-side layout; positions scaled for taller image */}
-                  <div className="absolute top-[60px] left-[60px] hidden lg:block pointer-events-none">
+                  <div className="absolute top-[60px] left-[60px] hidden min-[1600px]:block pointer-events-none">
                     <Image src={RACE_BAR1} alt="" width={70} height={20} className="object-contain" />
                   </div>
-                  <div className="absolute top-[145px] left-[130px] hidden lg:block pointer-events-none">
+                  <div className="absolute top-[145px] left-[130px] hidden min-[1600px]:block pointer-events-none">
                     <Image src={RACE_BAR2} alt="" width={30} height={20} className="object-contain" />
                   </div>
-                  <div className="absolute top-[230px] left-[150px] hidden lg:block pointer-events-none">
+                  <div className="absolute top-[230px] left-[150px] hidden min-[1600px]:block pointer-events-none">
                     <Image src={RACE_BAR3} alt="" width={30} height={20} className="object-contain" />
                   </div>
-                  <div className="absolute top-[315px] left-[100px] hidden lg:block pointer-events-none">
+                  <div className="absolute top-[315px] left-[100px] hidden min-[1600px]:block pointer-events-none">
                     <Image src={RACE_BAR4} alt="" width={30} height={20} className="object-contain" />
                   </div>
                 </div>
