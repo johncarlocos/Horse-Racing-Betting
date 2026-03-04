@@ -32,8 +32,8 @@ const MOCK_LEADERBOARD = [
 ];
 
 const POSITION_STYLES: Record<number, string> = {
-  1: "bg-[#E8A317] text-black",
-  2: "bg-[#28E88E] text-black",
+  1: "bg-[#F7A83B] text-white",
+  2: "bg-[#28E88E] text-white",
   3: "bg-[#3B82F6] text-white",
   4: "bg-[#8B5CF6] text-white",
 };
@@ -169,28 +169,22 @@ export default function MatchesPage() {
                   {MOCK_LEADERBOARD.map((row) => (
                     <div
                       key={row.position}
-                      className={`rounded-xl border p-3.5 shadow-lg transition ${
-                        row.position === 1
-                          ? "border-amber-500/40 bg-[#252525] shadow-amber-500/10"
-                          : "border-white/10 bg-[#1f1f1f] shadow-black/30"
-                      }`}
+                      className="rounded-xl bg-[#1e1e1e] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`inline-flex h-6 min-w-[2.5rem] shrink-0 items-center justify-center rounded-md px-2 font-inter text-xs font-bold ${POSITION_STYLES[row.position]}`}
-                            >
-                              {row.position}
-                              {row.position === 1 ? "st" : row.position === 2 ? "nd" : row.position === 3 ? "rd" : "th"}
-                            </span>
-                            <span className="font-inter text-sm font-semibold text-white truncate">{row.horse}</span>
-                          </div>
-                          <p className="font-inter text-xs text-white/60">{row.highlight}</p>
+                      <div className="flex items-center justify-between gap-4">
+                        <span
+                          className={`inline-flex h-7 min-w-[2.75rem] shrink-0 items-center justify-center rounded-lg px-2.5 font-inter text-xs font-semibold ${POSITION_STYLES[row.position]}`}
+                        >
+                          {row.position}
+                          {row.position === 1 ? "st" : row.position === 2 ? "nd" : row.position === 3 ? "rd" : "th"}
+                        </span>
+                        <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                          <span className="font-inter text-base font-bold text-white leading-tight">{row.horse}</span>
+                          <p className="font-inter text-xs text-[#A0A0A0] leading-tight">{row.highlight}</p>
                         </div>
                         <div className="shrink-0 text-right">
-                          <p className="font-inter text-xs text-white/60">Win Rate</p>
-                          <p className="font-inter text-sm font-semibold text-[#28E88E]">{row.winRate}</p>
+                          <p className="font-inter text-xs text-[#A0A0A0] leading-tight">Win Rate</p>
+                          <p className="font-inter text-base font-bold text-[#32CD32] leading-tight">{row.winRate}</p>
                         </div>
                       </div>
                     </div>
