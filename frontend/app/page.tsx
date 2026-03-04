@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Logo, PrimaryLink } from "@/components/ui";
+import { COPY, ROUTES } from "@/lib/constants";
 
 export default function Home() {
   return (
@@ -7,20 +9,7 @@ export default function Home() {
       {/* Header: on mobile transparent over image at top; on desktop black bar */}
       <header className="absolute top-0 left-0 right-0 z-30 w-full bg-transparent lg:static lg:bg-black">
         <div className="mx-auto flex w-full max-w-[1440px] items-center justify-start px-4 pt-8 lg:px-8 mb-6 lg:mb-0">
-          <Link href="/" className="flex items-center gap-2 text-inherit no-underline">
-            <div className="flex h-[30px] w-[48px] items-center justify-center">
-              <Image
-                src="/assets/Group.png"
-                alt="Go Racing logo"
-                width={40}
-                height={28}
-              />
-            </div>
-            <span className="inline-flex items-baseline gap-1 text-[22px] font-medium leading-[1.4]">
-              <span className="text-white">Go</span>
-              <span className="text-[#fbbf24]  decoration-orange-400/70 decoration-2 underline-offset-1">Racing</span>
-            </span>
-          </Link>
+          <Logo accentUnderline />
         </div>
       </header>
 
@@ -54,20 +43,14 @@ export default function Home() {
             </h1>
 
             <p className="max-w-[430px] font-inter text-[16px] font-light leading-[1.4] tracking-[0.01em] text-white lg:text-[#B3B3B3]">
-              Turn complex race data into clear, confident decisions with real-time
-              AI insights built for modern bettors.
+              {COPY.HERO.DESCRIPTION}
             </p>
 
             <div className="mt-6 flex flex-row flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
+              <PrimaryLink href={ROUTES.LOGIN}>Log In</PrimaryLink>
               <Link
-                href="/login"
-                className="inline-flex h-[54px] min-w-[120px] items-center justify-center rounded-full px-8 py-[17px] font-inter text-[16px] font-medium leading-[1] tracking-[-0.03em] text-[#020308] [background:linear-gradient(0deg,#28E88E,#28E88E),radial-gradient(44.33%_44.33%_at_50.2%_0%,rgba(255,255,255,0.2)_0%,rgba(255,255,255,0)_100%)] [box-shadow:0px_7px_16px_0px_#28E88E33,0px_30px_30px_0px_#28E88E2B,0px_67px_40px_0px_#28E88E1A,0px_119px_47px_0px_#28E88E08,0px_185px_52px_0px_#28E88E00] lg:min-w-0"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/matches"
-                className="inline-flex h-[54px] items-center justify-center rounded-full border border-white/50 bg-black/40 lg:bg-transparent px-6 py-[17px] font-inter text-[16px] font-normal leading-[1.4] tracking-[0] text-white lg:border-white/40 lg:px-8"
+                href={ROUTES.MATCHES}
+                className="inline-flex h-[54px] items-center justify-center rounded-full border border-white/50 bg-black/40 lg:bg-transparent px-6 py-[17px] font-inter text-[16px] font-normal leading-[1.4] tracking-[0] text-white lg:border-white/40 lg:px-8 no-underline"
               >
                 View Live Matches
               </Link>
