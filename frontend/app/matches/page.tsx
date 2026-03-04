@@ -42,6 +42,14 @@ const POSITION_STYLES: Record<number, string> = {
   4: "bg-[#8B5CF6] text-white",
 };
 
+/** Per-box left offset (lg) so each horse box aligns differently toward the track */
+const HORSE_BOX_LEFT_OFFSET: Record<number, string> = {
+  1: "lg:-ml-20 lg: mr-20",
+  2: "lg:-ml-12  lg: mr-12",
+  3: "lg:-ml-8  lg: mr-8",
+  4: "lg:-ml-20  lg: mr-20",
+};
+
 // Screen1: #Hamper89 red down, #Rambo89 green up
 const MOCK_ODDS = [
   { horse: "#Hamper89", odds: "4.5", trend: "down", ai: "32%", speed: "91", ev: "+18%" },
@@ -219,7 +227,7 @@ export default function MatchesPage() {
                   {MOCK_LEADERBOARD.map((row) => (
                     <div
                       key={row.position}
-                      className="rounded-xl bg-[#1e1e1e] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5"
+                      className={`rounded-xl bg-[#1e1e1e] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] border border-white/5 ${HORSE_BOX_LEFT_OFFSET[row.position]}`}
                     >
                       <div className="flex items-center justify-between gap-[10px]">
                         <span
