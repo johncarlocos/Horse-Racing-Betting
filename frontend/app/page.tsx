@@ -1,18 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Logo, PrimaryLink } from "@/components/ui";
+import { PrimaryLink } from "@/components/ui";
 import { COPY, ROUTES } from "@/lib/constants";
 
 export default function Home() {
   return (
     <div className="min-w-0 overflow-x-hidden relative" style={{ background: 'linear-gradient(152.57deg, #282828 15.06%, #141414 60.23%)' }}>
-      {/* Header: on mobile transparent over image at top; on desktop black bar */}
-      <header className="absolute top-0 left-0 right-0 z-30 w-full bg-transparent lg:static lg:bg-black">
-        <div className="mx-auto flex w-full max-w-[1440px] items-center justify-start px-4 pt-8 lg:px-8 mb-6 lg:mb-0">
-          <Logo accentUnderline />
-        </div>
-      </header>
-
       <main className="bg-black">
         <div className="relative mx-auto w-full max-w-[1440px] overflow-visible px-0 lg:px-8">
           {/* Hero: on mobile image to ~middle of screen, content overlaid on lower portion; on lg two-column grid (Screenshot 2) */}
