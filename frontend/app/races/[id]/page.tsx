@@ -103,13 +103,14 @@ const MOCK_RACECARD = [
   },
 ];
 
+/** Rank badge: 1–3 dark green + lime border; 4–6 dark gray + golden border; pill shape */
 const RANK_STYLES: Record<number, string> = {
-  1: "bg-[#28E88E] text-white",
-  2: "bg-[#F7A83B] text-white",
-  3: "bg-[#F7A83B] text-white",
-  4: "bg-[#F7A83B] text-white",
-  5: "bg-[#F7A83B] text-white",
-  6: "bg-[#F7A83B] text-white",
+  1: "bg-[#1a3328] border border-[#28E88E] text-white",
+  2: "bg-[#1a3328] border border-[#28E88E] text-white",
+  3: "bg-[#1a3328] border border-[#28E88E] text-white",
+  4: "bg-[#1a1a1a] border border-[#fbbf24] text-white",
+  5: "bg-[#1a1a1a] border border-[#fbbf24] text-white",
+  6: "bg-[#1a1a1a] border border-[#fbbf24] text-white",
 };
 
 /** Radar chart axes: Surface, Speed, Class, Distance, Form (values 0–100) */
@@ -220,7 +221,7 @@ export default function RaceDetailPage() {
                   <tr key={row.rank} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                     <td className="py-3 pr-4">
                       <span
-                        className={`inline-flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full font-medium ${RANK_STYLES[row.rank]}`}
+                        className={`inline-flex min-w-[28px] h-8 items-center justify-center rounded-lg px-2 font-medium text-white ${RANK_STYLES[row.rank]}`}
                       >
                         {row.rank}
                       </span>
