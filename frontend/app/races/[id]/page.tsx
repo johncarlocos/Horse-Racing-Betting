@@ -158,8 +158,21 @@ export default function RaceDetailPage() {
               </p>
             </div>
           </div>
-          <span className="inline-flex shrink-0 rounded-lg bg-[#1a3328] border border-[#28E88E]/30 px-4 py-2 font-inter text-xs font-medium text-[#28E88E]">
-            {race.status}
+          <span
+            className="inline-flex shrink-0 items-center justify-center rounded-[44px] p-[1px] w-[99px] h-[29px]"
+            style={{
+              background: "radial-gradient(58.97% 354.93% at 15.38% 13.16%, #28E88E 0%, #168250 100%)",
+            }}
+          >
+            <span
+              className="flex h-full w-full items-center justify-center rounded-[43px] font-inter font-medium text-[14px] leading-[100%] tracking-[-0.03em] text-center text-white"
+              style={{
+                padding: "6px 12px",
+                background: "#0d0d0d",
+              }}
+            >
+              {race.status}
+            </span>
           </span>
         </section>
 
