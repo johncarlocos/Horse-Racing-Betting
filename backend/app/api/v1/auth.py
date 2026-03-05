@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
 from app.core.security import create_access_token, hash_password, verify_password
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.schemas.auth import LoginRequest, SignupRequest, TokenResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -21,6 +21,7 @@ async def signup(body: SignupRequest, db: AsyncSession = Depends(get_db)):
     user = User(
         email=body.email,
         hashed_password=hash_password(body.password),
+        role=UserRole.member,
         privacy_policy_accepted=body.privacy_policy_accepted,
         privacy_accepted_at=datetime.now(timezone.utc) if body.privacy_policy_accepted else None,
     )
@@ -28,8 +29,8 @@ async def signup(body: SignupRequest, db: AsyncSession = Depends(get_db)):
     await db.commit()
     await db.refresh(user)
 
-    token = create_access_token(str(user.id))
-    return TokenResponse(access_token=token)
+    token = create_access_token(str(user.id), user.role.value)
+    return TokenResponse(access_token=token, role=user.role.value)
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -46,5 +47,5 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account disabled")
 
-    token = create_access_token(str(user.id))
-    return TokenResponse(access_token=token)
+    token = create_access_token(str(user.id), user.role.value)
+    return TokenResponse(access_token=token, role=user.role.value)

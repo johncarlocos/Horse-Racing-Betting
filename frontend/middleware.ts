@@ -2,7 +2,7 @@ import { jwtVerify } from "jose";
 import { type NextRequest, NextResponse } from "next/server";
 import { ROUTES } from "@/lib/constants";
 
-const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.SIGNUP, ROUTES.PRIVACY_POLICY];
+const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.SIGNUP, ROUTES.PRIVACY_POLICY, ROUTES.ADMIN_LOGIN, ROUTES.SUBADMIN_LOGIN];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -20,15 +20,27 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token")?.value;
 
   if (!token) {
+    // Route to appropriate login
+    if (pathname.startsWith("/admin")) return NextResponse.redirect(new URL(ROUTES.ADMIN_LOGIN, request.url));
+    if (pathname.startsWith("/subadmin")) return NextResponse.redirect(new URL(ROUTES.SUBADMIN_LOGIN, request.url));
     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
   }
 
   try {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY ?? "");
-    await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret);
+    const role = payload.role as string | undefined;
+
+    // Role-based route protection
+    if (pathname.startsWith("/admin") && role !== "admin") {
+      return NextResponse.redirect(new URL(ROUTES.ADMIN_LOGIN, request.url));
+    }
+    if (pathname.startsWith("/subadmin") && role !== "subadmin") {
+      return NextResponse.redirect(new URL(ROUTES.SUBADMIN_LOGIN, request.url));
+    }
+
     return NextResponse.next();
   } catch {
-    // Token invalid or expired — clear cookie and redirect
     const response = NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
     response.cookies.set("auth_token", "", { maxAge: 0, path: "/" });
     return response;
