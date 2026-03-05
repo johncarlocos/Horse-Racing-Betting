@@ -1,15 +1,11 @@
-import os
 from contextlib import asynccontextmanager
-
-from dotenv import load_dotenv
-
-load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database import Base, engine
-from .routes import auth
+from app.api.v1 import auth
+from app.config import settings
+from app.database import Base, engine
 
 
 @asynccontextmanager
@@ -21,17 +17,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Horse Racing API", lifespan=lifespan)
 
-allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=settings.allowed_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(auth.router)
+app.include_router(auth.router, prefix="/api/v1")
 
 
 @app.get("/health")
