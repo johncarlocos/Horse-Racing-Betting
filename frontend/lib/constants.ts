@@ -6,6 +6,7 @@ export const ROUTES = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   MATCHES: "/matches",
+  RACE: (id: string) => `/races/${id}`,
 } as const;
 
 /**
