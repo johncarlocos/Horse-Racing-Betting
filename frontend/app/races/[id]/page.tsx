@@ -127,11 +127,11 @@ export default function RaceDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
-      <main className="mx-auto w-full max-w-[1600px] space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+      <main className="mx-auto w-full max-w-[1600px] space-y-4 px-3 py-4 sm:space-y-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         {/* Back link */}
         <Link
           href={ROUTES.MATCHES}
-          className="inline-flex items-center gap-1.5 font-inter text-sm text-white/80 transition hover:text-white"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center gap-1.5 font-inter text-sm text-white/80 transition hover:text-white"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -139,16 +139,16 @@ export default function RaceDetailPage() {
           Back
         </Link>
 
-        {/* Race title block */}
+        {/* Race title block — mobile: stack with left align; sm+: row with space-between */}
         <section className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="relative h-10 w-10 shrink-0 flex items-center justify-center">
               <Image src={RACE_HORSE} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
             </div>
-            <div className="min-w-0">
-              <p className="font-inter text-[18px] text-white/70">Race {race.raceNumber}</p>
-              <h1 className="font-inter text-[30px] font-bold text-white mt-[-8px]">{race.name}</h1>
-              <p className="font-inter text-[16px] text-white/60 mt-[-5px] flex flex-wrap items-center gap-x-2 gap-y-1">
+            <div className="min-w-0 flex-1">
+              <p className="font-inter text-base sm:text-[18px] text-white/70 leading-tight">Race {race.raceNumber}</p>
+              <h1 className="font-inter text-2xl font-bold text-white mt-0.5 leading-tight sm:text-[30px] ">{race.name}</h1>
+              <p className="font-inter text-sm sm:text-[16px] text-white/60 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 leading-tight">
                 <span>{race.venue}</span>
                 <span className="text-white/40">•</span>
                 <span>{race.time}</span>
@@ -160,7 +160,7 @@ export default function RaceDetailPage() {
             </div>
           </div>
           <span
-            className="inline-flex shrink-0 items-center justify-center rounded-[44px] p-[1px] w-[99px] h-[29px]"
+            className="inline-flex shrink-0 items-center justify-center self-start rounded-[44px] p-[1px] w-[99px] h-[29px] min-w-[99px] sm:self-center"
             style={{
               background: "radial-gradient(58.97% 354.93% at 15.38% 13.16%, #28E88E 0%, #168250 100%)",
             }}
@@ -177,76 +177,76 @@ export default function RaceDetailPage() {
           </span>
         </section>
 
-        {/* Key race statistics bar */}
+        {/* Key race statistics bar — mobile: 2x2 grid, each cell centered; sm+: single row with dividers */}
         <section className="rounded-xl border border-white/10 bg-[#1E1E1E] p-4 sm:p-5">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
-            <div className="text-center sm:text-left">
-              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.prizePool}</p>
-              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Prize Pool</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 sm:gap-0">
+            <div className="flex flex-col items-center justify-center py-4 text-center sm:items-start sm:justify-center sm:py-0 sm:text-left sm:pl-0">
+              <p className="font-inter text-xl font-semibold text-white sm:text-2xl lg:text-[28px] leading-tight">{race.prizePool}</p>
+              <p className="font-inter text-xs text-white/60 mt-1 sm:text-sm">Prize Pool</p>
             </div>
-            <div className="text-center sm:text-left border-t border-white/10 sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6">
-              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.fieldSize}</p>
-              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Field Size</p>
+            <div className="flex flex-col items-center justify-center border-l border-white/10 py-4 text-center sm:items-start sm:justify-center sm:py-0 sm:pl-6 sm:text-left">
+              <p className="font-inter text-xl font-semibold text-white sm:text-2xl lg:text-[28px] leading-tight">{race.fieldSize}</p>
+              <p className="font-inter text-xs text-white/60 mt-1 sm:text-sm">Field Size</p>
             </div>
-            <div className="text-center sm:text-left border-t border-white/10 sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6">
-              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.topFavourite}</p>
-              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Top Favourite</p>
+            <div className="flex flex-col items-center justify-center border-t border-white/10 py-4 text-center sm:border-t-0 sm:border-l sm:border-white/10 sm:items-start sm:justify-center sm:py-0 sm:pl-6 sm:text-left">
+              <p className="font-inter text-xl font-semibold text-white sm:text-2xl lg:text-[28px] leading-tight">{race.topFavourite}</p>
+              <p className="font-inter text-xs text-white/60 mt-1 sm:text-sm">Top Favourite</p>
             </div>
-            <div className="text-center sm:text-left border-t border-white/10 sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6">
-              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.longshot}</p>
-              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Longshot</p>
+            <div className="flex flex-col items-center justify-center border-t border-l border-white/10 py-4 text-center sm:border-t-0 sm:border-l sm:border-white/10 sm:items-start sm:justify-center sm:py-0 sm:pl-6 sm:text-left">
+              <p className="font-inter text-xl font-semibold text-white sm:text-2xl lg:text-[28px] leading-tight">{race.longshot}</p>
+              <p className="font-inter text-xs text-white/60 mt-1 sm:text-sm">Longshot</p>
             </div>
           </div>
         </section>
 
         {/* Smart Racecard table */}
-        <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6">
-          <h2 className="font-inter text-base sm:text-[22px] font-semibold text-white mb-4">Smart Racecard</h2>
+        <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-3 sm:p-5 lg:p-6">
+          <h2 className="font-inter text-base font-semibold text-white mb-3 sm:text-[22px] sm:mb-4">Smart Racecard</h2>
           <div className="overflow-x-auto -mx-1">
-            <table className="w-full min-w-[720px] font-inter text-xs sm:text-sm">
+            <table className="w-full min-w-[640px] sm:min-w-[720px] font-inter text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-left text-white/70">
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Rank</th>
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Horse</th>
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Jockey</th>
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Turf</th>
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Speed</th>
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Class</th>
-                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Win %</th>
-                  <th className="pb-3 font-medium text-[12.5px] whitespace-nowrap">Bet Status</th>
+                <tr className="border-b border-white/10 text-left text-white/70 align-middle">
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Rank</th>
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Horse</th>
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Jockey</th>
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Turf</th>
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Speed</th>
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Class</th>
+                  <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Win %</th>
+                  <th className="pb-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:text-[12.5px]">Bet Status</th>
                 </tr>
               </thead>
               <tbody>
                 {MOCK_RACECARD.map((row) => (
-                  <tr key={row.rank} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="py-3 pr-4">
+                  <tr key={row.rank} className="border-b border-white/5 hover:bg-white/5 transition-colors align-middle">
+                    <td className="align-middle py-2.5 pr-2 sm:py-3 sm:pr-4">
                       <span
-                        className={`inline-flex min-w-[28px] h-8 items-center justify-center rounded-lg px-2 font-medium text-white ${RANK_STYLES[row.rank]}`}
+                        className={`inline-flex min-w-[26px] h-7 items-center justify-center rounded-lg px-1.5 font-medium text-white sm:min-w-[28px] sm:h-8 sm:px-2 ${RANK_STYLES[row.rank]}`}
                       >
                         {row.rank}
                       </span>
                     </td>
-                    <td className="py-3 pr-4">
-                      <div>
-                        <p className="font-medium text-white">{row.horse}</p>
-                        <p className="text-white/60 text-[11px] sm:text-xs mt-0.5">
+                    <td className="align-middle py-2.5 pr-2 sm:py-3 sm:pr-4">
+                      <div className="min-w-0">
+                        <p className="font-medium text-white truncate">{row.horse}</p>
+                        <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 truncate">
                           {row.age} · {row.sire}
                         </p>
                       </div>
                     </td>
-                    <td className="py-3 pr-4">
-                      <div>
-                        <p className="font-medium text-white">{row.jockey}</p>
-                        <p className="text-white/60 text-[11px] sm:text-xs mt-0.5">{row.trainer}</p>
+                    <td className="align-middle py-2.5 pr-2 sm:py-3 sm:pr-4">
+                      <div className="min-w-0">
+                        <p className="font-medium text-white truncate">{row.jockey}</p>
+                        <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 truncate">{row.trainer}</p>
                       </div>
                     </td>
-                    <td className="py-3 pr-4 text-white">{row.turf}</td>
-                    <td className="py-3 pr-4 text-white">{row.speed}</td>
-                    <td className="py-3 pr-4 text-white">{row.class}</td>
-                    <td className="py-3 pr-4 font-medium text-[#28E88E]">{row.winPct}</td>
-                    <td className="py-3">
+                    <td className="align-middle py-2.5 pr-2 text-white sm:py-3 sm:pr-4 whitespace-nowrap">{row.turf}</td>
+                    <td className="align-middle py-2.5 pr-2 text-white sm:py-3 sm:pr-4">{row.speed}</td>
+                    <td className="align-middle py-2.5 pr-2 text-white sm:py-3 sm:pr-4">{row.class}</td>
+                    <td className="align-middle py-2.5 pr-2 font-medium text-[#28E88E] sm:py-3 sm:pr-4">{row.winPct}</td>
+                    <td className="align-middle py-2.5 sm:py-3">
                       <span
-                        className={`inline-block rounded-lg px-3 py-1.5 text-xs font-medium ${
+                        className={`inline-block rounded-lg px-2 py-1 text-[10px] font-medium sm:px-3 sm:py-1.5 sm:text-xs ${
                           row.betStatus === "Accepting"
                             ? "bg-[#28E88E]/20 text-[#28E88E] border border-[#28E88E]/40"
                             : "bg-red-500/20 text-red-400 border border-red-500/40"
@@ -263,29 +263,29 @@ export default function RaceDetailPage() {
         </section>
 
         {/* Analytical panels: Pedigree, AI Win Probability, Market Activity */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Pedigree Analysis — radar chart */}
           <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6">
-            <h3 className="font-inter text-base font-semibold text-white mb-6">Pedigree Analysis</h3>
-            <div className="flex items-center justify-center min-h-[240px]">
+            <h3 className="font-inter text-[22px] font-semibold text-white mb-4 sm:mb-6">Pedigree Analysis</h3>
+            <div className="flex items-center justify-center min-h-[160px] w-full max-w-[160px] aspect-square sm:min-h-[240px] sm:max-w-[180px] mx-auto">
               <PedigreeRadarChart values={PEDIGREE_VALUES} labels={RADAR_LABELS} />
             </div>
           </article>
 
           {/* AI Win Probability — donut */}
           <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6">
-            <h3 className="font-inter text-base font-semibold text-white mb-6">AI Win Probability</h3>
-            <div className="flex items-center justify-center min-h-[240px]">
+            <h3 className="font-inter text-[22px] font-semibold text-white mb-4 sm:mb-6">AI Win Probability</h3>
+            <div className="flex items-center justify-center min-h-[160px] w-full max-w-[160px] aspect-square sm:min-h-[240px] sm:max-w-[200px] mx-auto">
               <AIWinDonutChart winPct={35.2} otherSegments={DONUT_SEGMENTS} />
             </div>
           </article>
 
           {/* Market Activity — scatter + legend */}
-          <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6">
-            <h3 className="font-inter text-base font-semibold text-white mb-6">Market Activity</h3>
-            <div className="flex flex-col items-center justify-center min-h-[240px]">
+          <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6 md:col-span-2 lg:col-span-1">
+            <h3 className="font-inter text-[22px] font-semibold text-white mb-4 sm:mb-6">Market Activity</h3>
+            <div className="flex flex-col items-center justify-center min-h-[200px] sm:min-h-[240px]">
               <MarketActivityChart />
-              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4 font-inter text-xs text-white/80">
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-3 sm:mt-4 font-inter text-[11px] sm:text-xs text-white/80">
                 <span className="inline-flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#28E88E]" />
                   Odds Dropping
@@ -334,7 +334,7 @@ function PedigreeRadarChart({ values, labels }: { values: number[]; labels: stri
     .join(" ") + " Z";
 
   return (
-    <svg width={size} height={size} className="overflow-visible">
+    <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full min-w-0 min-h-0 overflow-visible" preserveAspectRatio="xMidYMid meet">
       {/* grid lines */}
       {[0.25, 0.5, 0.75, 1].map((scale) => {
         const pts = points.map((p) => ({
@@ -380,8 +380,8 @@ function AIWinDonutChart({ winPct, otherSegments }: { winPct: number; otherSegme
   ];
   let offsetDeg = 0;
   return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg width={size} height={size} className="overflow-visible">
+    <div className="relative inline-flex w-full max-w-full items-center justify-center aspect-square max-h-[200px] sm:max-h-none">
+      <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full min-w-0 min-h-0 overflow-visible" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="aiWinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#28E88E" />
@@ -410,8 +410,8 @@ function AIWinDonutChart({ winPct, otherSegments }: { winPct: number; otherSegme
         })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <span className="font-inter text-3xl font-bold text-[#fbbf24]">{winPct}%</span>
-        <span className="font-inter text-xs text-white/80 mt-0.5">Win Chance</span>
+        <span className="font-inter text-2xl font-bold text-[#fbbf24] sm:text-3xl">{winPct}%</span>
+        <span className="font-inter text-[10px] text-white/80 mt-0.5 sm:text-xs">Win Chance</span>
       </div>
     </div>
   );
@@ -433,15 +433,26 @@ function MarketActivityChart() {
   ];
   const scaleX = (v: number) => padding.left + (v / 40) * plotW;
   const scaleY = (v: number) => padding.top + plotH - (v / 20) * plotH;
+  const yAxisLabelX = padding.left - 10;
+  const yAxisLabelY = padding.top + plotH / 2;
+  const xAxisLabelX = padding.left + plotW / 2;
+  const xAxisLabelY = h - 6;
 
   return (
-    <svg width={w} height={h} className="overflow-visible">
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-[260px] h-auto overflow-visible sm:max-w-none" preserveAspectRatio="xMidYMid meet">
       <line x1={padding.left} y1={padding.top} x2={padding.left} y2={h - padding.bottom} stroke="rgba(255,255,255,0.2)" strokeWidth={1} />
       <line x1={padding.left} y1={h - padding.bottom} x2={w - padding.right} y2={h - padding.bottom} stroke="rgba(255,255,255,0.2)" strokeWidth={1} />
-      <text x={padding.left - 8} y={padding.top + 4} className="fill-white/60 font-inter text-[10px]" textAnchor="end">
+      <text
+        x={yAxisLabelX}
+        y={yAxisLabelY}
+        className="fill-white/60 font-inter text-[10px]"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        transform={`rotate(-90, ${yAxisLabelX}, ${yAxisLabelY})`}
+      >
         Odds
       </text>
-      <text x={w - padding.right} y={h - 4} className="fill-white/60 font-inter text-[10px]" textAnchor="middle">
+      <text x={xAxisLabelX} y={xAxisLabelY} className="fill-white/60 font-inter text-[10px]" textAnchor="middle" dominantBaseline="auto">
         Win Probability
       </text>
       {points.map((p, i) => (
