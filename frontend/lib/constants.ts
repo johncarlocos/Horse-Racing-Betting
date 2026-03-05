@@ -7,6 +7,7 @@ export const ROUTES = {
   SIGNUP: "/signup",
   MATCHES: "/matches",
   RACE: (id: string) => `/races/${id}`,
+  PRIVACY_POLICY: "/privacy-policy",
 } as const;
 
 /**
@@ -35,5 +36,6 @@ export const COPY = {
     LOGIN_CTA: "Log In",
     HAVE_ACCOUNT: "Already have an account?",
     NO_ACCOUNT: "Don't have an account?",
+    PRIVACY_POLICY_PREFIX: "I agree to the",
   },
 } as const;

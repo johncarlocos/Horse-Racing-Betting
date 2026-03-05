@@ -1,13 +1,14 @@
+import { jwtVerify } from "jose";
 import { type NextRequest, NextResponse } from "next/server";
 import { ROUTES } from "@/lib/constants";
 
-const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.SIGNUP];
+const PUBLIC_ROUTES = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.SIGNUP, ROUTES.PRIVACY_POLICY];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public routes and static assets through
-  const isPublic = PUBLIC_ROUTES.some((route) => pathname === route) ||
+  const isPublic =
+    PUBLIC_ROUTES.some((route) => pathname === route) ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/assets") ||
     pathname.startsWith("/api");
@@ -16,14 +17,22 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // TODO: Replace with real session/token check once auth is implemented
-  const isAuthenticated = true;
+  const token = request.cookies.get("auth_token")?.value;
 
-  if (!isAuthenticated) {
+  if (!token) {
     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
   }
 
-  return NextResponse.next();
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY ?? "");
+    await jwtVerify(token, secret);
+    return NextResponse.next();
+  } catch {
+    // Token invalid or expired — clear cookie and redirect
+    const response = NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
+    response.cookies.set("auth_token", "", { maxAge: 0, path: "/" });
+    return response;
+  }
 }
 
 export const config = {
