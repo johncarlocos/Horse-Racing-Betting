@@ -20,10 +20,7 @@ export default function SignUpPage() {
         {COPY.AUTH.SIGNUP_WELCOME}
       </p>
 
-      <form
-        className="flex flex-col gap-6"
-        onSubmit={(e) => e.preventDefault()}
-      >
+      <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
         <TextField
           id="email"
           label={COPY.AUTH.EMAIL_LABEL}
@@ -51,10 +48,7 @@ export default function SignUpPage() {
 
       <p className="mt-6 sm:mt-8 text-center font-inter text-[13px] sm:text-[14px] text-[#B3B3B3]">
         {COPY.AUTH.HAVE_ACCOUNT}{" "}
-        <Link
-          href={ROUTES.LOGIN}
-          className="text-[#28E88E] font-medium no-underline hover:underline"
-        >
+        <Link href={ROUTES.LOGIN} className="text-[#28E88E] font-medium no-underline hover:underline">
           Log In
         </Link>
       </p>

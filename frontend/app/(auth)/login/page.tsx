@@ -27,10 +27,7 @@ export default function LoginPage() {
         {COPY.AUTH.LOGIN_WELCOME}
       </p>
 
-      <form
-        className="flex flex-col gap-6"
-        onSubmit={handleSubmit}
-      >
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <TextField
           id="email"
           label={COPY.AUTH.EMAIL_LABEL}
@@ -51,10 +48,7 @@ export default function LoginPage() {
 
       <p className="mt-6 sm:mt-8 text-center font-inter text-[13px] sm:text-[14px] text-[#B3B3B3]">
         {COPY.AUTH.NO_ACCOUNT}{" "}
-        <Link
-          href={ROUTES.SIGNUP}
-          className="text-[#28E88E] font-medium no-underline hover:underline"
-        >
+        <Link href={ROUTES.SIGNUP} className="text-[#28E88E] font-medium no-underline hover:underline">
           Sign Up
         </Link>
       </p>
