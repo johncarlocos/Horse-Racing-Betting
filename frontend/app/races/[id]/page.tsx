@@ -180,39 +180,39 @@ export default function RaceDetailPage() {
         <section className="rounded-xl border border-white/10 bg-[#1E1E1E] p-4 sm:p-5">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
             <div className="text-center sm:text-left">
-              <p className="font-inter text-2xl sm:text-[28px] font-semibold text-white">{race.prizePool}</p>
-              <p className="font-inter text-xs sm:text-sm text-white/60 mt-1">Prize Pool</p>
+              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.prizePool}</p>
+              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Prize Pool</p>
             </div>
             <div className="text-center sm:text-left border-t border-white/10 sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6">
-              <p className="font-inter text-2xl sm:text-[28px] font-semibold text-white">{race.fieldSize}</p>
-              <p className="font-inter text-xs sm:text-sm text-white/60 mt-1">Field Size</p>
+              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.fieldSize}</p>
+              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Field Size</p>
             </div>
             <div className="text-center sm:text-left border-t border-white/10 sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6">
-              <p className="font-inter text-2xl sm:text-[28px] font-semibold text-white">{race.topFavourite}</p>
-              <p className="font-inter text-xs sm:text-sm text-white/60 mt-1">Top Favourite</p>
+              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.topFavourite}</p>
+              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Top Favourite</p>
             </div>
             <div className="text-center sm:text-left border-t border-white/10 sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6">
-              <p className="font-inter text-2xl sm:text-[28px] font-semibold text-white">{race.longshot}</p>
-              <p className="font-inter text-xs sm:text-sm text-white/60 mt-1">Longshot</p>
+              <p className="font-inter text-2xl sm:text-[18px] font-semibold text-white">{race.longshot}</p>
+              <p className="font-inter text-xs sm:text-[14px] text-white/60 mt-1">Longshot</p>
             </div>
           </div>
         </section>
 
         {/* Smart Racecard table */}
         <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6">
-          <h2 className="font-inter text-base sm:text-lg font-semibold text-white mb-4">Smart Racecard</h2>
+          <h2 className="font-inter text-base sm:text-[22px] font-semibold text-white mb-4">Smart Racecard</h2>
           <div className="overflow-x-auto -mx-1">
             <table className="w-full min-w-[720px] font-inter text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-white/10 text-left text-white/70">
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Rank</th>
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Horse</th>
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Jockey</th>
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Turf</th>
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Speed</th>
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Class</th>
-                  <th className="pb-3 pr-4 font-medium whitespace-nowrap">Win %</th>
-                  <th className="pb-3 font-medium whitespace-nowrap">Bet Status</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Rank</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Horse</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Jockey</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Turf</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Speed</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Class</th>
+                  <th className="pb-3 pr-4 font-medium text-[12.5px] whitespace-nowrap">Win %</th>
+                  <th className="pb-3 font-medium text-[12.5px] whitespace-nowrap">Bet Status</th>
                 </tr>
               </thead>
               <tbody>
