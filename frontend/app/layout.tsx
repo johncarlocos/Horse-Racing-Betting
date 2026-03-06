@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/layout";
+import { AuthProvider } from "@/lib/context/AuthContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="overflow-x-hidden font-sans bg-black text-white">
-        <Header />
-        {children}
+        <AuthProvider>
+          <Header />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

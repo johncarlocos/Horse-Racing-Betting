@@ -6,10 +6,12 @@ import { useState } from "react";
 import { AuthFormLayout, CheckboxField, PasswordField, TextField } from "@/components/auth";
 import { PrimaryButton } from "@/components/ui";
 import { apiSignup } from "@/lib/api";
+import { useAuth } from "@/lib/context/AuthContext";
 import { COPY, ROUTES } from "@/lib/constants";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -37,7 +39,8 @@ export default function SignUpPage() {
       return;
     }
 
-    router.push(ROUTES.MATCHES);
+    await refreshAuth();
+    router.push(ROUTES.HOME);
   };
 
   return (

@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { PrimaryLink } from "@/components/ui";
 import { ROUTES, COPY } from "@/lib/constants";
+import { useAuth } from "@/lib/context/AuthContext";
 
 export function HeroSection() {
+  const { auth } = useAuth();
+
   return (
     <div
       className="min-w-0 overflow-x-hidden relative"
@@ -52,7 +57,9 @@ export function HeroSection() {
               </p>
 
               <div className="mt-6 flex flex-row flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-                <PrimaryLink href={ROUTES.LOGIN}>Log In</PrimaryLink>
+                {!auth?.authenticated && (
+                  <PrimaryLink href={ROUTES.LOGIN}>Log In</PrimaryLink>
+                )}
                 <Link
                   href={ROUTES.MATCHES}
                   className="inline-flex h-[54px] items-center justify-center rounded-full border border-white/50 bg-black/40 lg:bg-transparent px-6 py-[17px] font-inter text-[16px] font-normal leading-[1.4] tracking-[0] text-white lg:border-white/40 lg:px-8 no-underline"

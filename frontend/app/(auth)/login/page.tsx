@@ -6,10 +6,12 @@ import { useState } from "react";
 import { AuthFormLayout, PasswordField, TextField } from "@/components/auth";
 import { PrimaryButton } from "@/components/ui";
 import { apiLogin } from "@/lib/api";
+import { useAuth } from "@/lib/context/AuthContext";
 import { COPY, ROUTES } from "@/lib/constants";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,7 +23,6 @@ export default function LoginPage() {
     setLoading(true);
 
     const result = await apiLogin(email, password);
-
     setLoading(false);
 
     if ("error" in result) {
@@ -29,7 +30,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(ROUTES.MATCHES);
+    await refreshAuth();
+    router.push(ROUTES.HOME);
   };
 
   return (

@@ -4,10 +4,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthFormLayout, PasswordField, TextField } from "@/components/auth";
 import { PrimaryButton } from "@/components/ui";
+import { useAuth } from "@/lib/context/AuthContext";
 import { COPY, ROUTES } from "@/lib/constants";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { refreshAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,7 +34,8 @@ export default function AdminLoginPage() {
       return;
     }
 
-    router.push(ROUTES.ADMIN_DASHBOARD);
+    await refreshAuth();
+    router.push(ROUTES.HOME);
   };
 
   return (
