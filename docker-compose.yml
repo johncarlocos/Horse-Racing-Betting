@@ -41,8 +41,16 @@ services:
     environment:
       BACKEND_URL: http://backend:8000
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-    ports:
-      - "3100:3000"
+    expose:
+      - "3000"
+    networks:
+      - default
+      - topx
 
 volumes:
   pgdata:
+
+networks:
+  topx:
+    external: true
+    name: topxhk_app-network
