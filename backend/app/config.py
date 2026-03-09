@@ -8,7 +8,9 @@ class Settings(BaseSettings):
     jwt_expire_minutes: int = 10080  # 7 days
     allowed_origins: str = "http://localhost:3000"
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
 
     @property
     def allowed_origins_list(self) -> list[str]:
