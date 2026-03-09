@@ -9,6 +9,12 @@ import { apiSignup } from "@/lib/api";
 import { useAuth } from "@/lib/context/AuthContext";
 import { COPY, ROUTES } from "@/lib/constants";
 
+type FieldErrors = {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
 export default function SignUpPage() {
   const router = useRouter();
   const { refreshAuth } = useAuth();
@@ -17,21 +23,58 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [privacyError, setPrivacyError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    const errors: FieldErrors = {};
+    const trimmed = email.trim();
+
+    if (!trimmed) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      errors.email = "Please enter a valid email address.";
+    }
+
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (password.length < 8) {
+      errors.password = "Password must be at least 8 characters.";
+    } else if (!/[A-Z]/.test(password)) {
+      errors.password = "Password must include an uppercase letter.";
+    } else if (!/[0-9]/.test(password)) {
+      errors.password = "Password must include a number.";
+    }
+
+    if (!confirmPassword) {
+      errors.confirmPassword = "Please confirm your password.";
+    } else if (password !== confirmPassword) {
+      errors.confirmPassword = "Passwords do not match.";
+    }
+
+    if (!privacyAccepted) {
+      setPrivacyError("You must accept the privacy policy to continue.");
+    } else {
+      setPrivacyError("");
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0 && privacyAccepted;
+  };
+
+  const clearField = (field: keyof FieldErrors) => {
+    if (fieldErrors[field]) setFieldErrors((p) => ({ ...p, [field]: undefined }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setPrivacyError("");
 
-    if (!privacyAccepted) {
-      setPrivacyError("You must accept the privacy policy to continue.");
-      return;
-    }
+    if (!validate()) return;
 
     setLoading(true);
-    const result = await apiSignup(email, password, confirmPassword, privacyAccepted);
+    const result = await apiSignup(email.trim(), password, confirmPassword, privacyAccepted);
     setLoading(false);
 
     if ("error" in result) {
@@ -59,8 +102,11 @@ export default function SignUpPage() {
           type="email"
           placeholder={COPY.AUTH.EMAIL_LABEL}
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          onChange={(e) => {
+            setEmail(e.target.value);
+            clearField("email");
+          }}
+          error={fieldErrors.email}
           disabled={loading}
         />
         <PasswordField
@@ -68,8 +114,11 @@ export default function SignUpPage() {
           label={COPY.AUTH.PASSWORD_LABEL}
           placeholder={COPY.AUTH.PASSWORD_LABEL}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          onChange={(e) => {
+            setPassword(e.target.value);
+            clearField("password");
+          }}
+          error={fieldErrors.password}
           disabled={loading}
         />
         <PasswordField
@@ -77,8 +126,11 @@ export default function SignUpPage() {
           label={COPY.AUTH.CONFIRM_PASSWORD_LABEL}
           placeholder={COPY.AUTH.CONFIRM_PASSWORD_LABEL}
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            clearField("confirmPassword");
+          }}
+          error={fieldErrors.confirmPassword}
           disabled={loading}
         />
 

@@ -12,12 +12,14 @@ type PasswordFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & 
   id: string;
   label: string;
   placeholder?: string;
+  error?: string;
 };
 
 export function PasswordField({
   id,
   label,
   placeholder = "Password",
+  error,
   value,
   onChange,
   ...props
@@ -36,7 +38,7 @@ export function PasswordField({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={INPUT_BASE_CLASS}
+          className={`${INPUT_BASE_CLASS} ${error ? "border-red-400" : ""}`}
           {...props}
         />
         <button
@@ -48,6 +50,9 @@ export function PasswordField({
           <Image src={EYE_ICON} alt="" width={20} height={20} className="invert opacity-100" />
         </button>
       </div>
+      {error && (
+        <p className="font-inter text-[12px] text-red-400 mt-1">{error}</p>
+      )}
     </div>
   );
 }

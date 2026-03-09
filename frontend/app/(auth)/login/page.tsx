@@ -15,14 +15,35 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    const errors: { email?: string; password?: string } = {};
+    const trimmed = email.trim();
+
+    if (!trimmed) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      errors.email = "Please enter a valid email address.";
+    }
+
+    if (!password) {
+      errors.password = "Password is required.";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
-    const result = await apiLogin(email, password);
+    if (!validate()) return;
+
+    setLoading(true);
+    const result = await apiLogin(email.trim(), password);
     setLoading(false);
 
     if ("error" in result) {
@@ -50,8 +71,11 @@ export default function LoginPage() {
           type="email"
           placeholder={COPY.AUTH.EMAIL_LABEL}
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (fieldErrors.email) setFieldErrors((p) => ({ ...p, email: undefined }));
+          }}
+          error={fieldErrors.email}
           disabled={loading}
         />
         <PasswordField
@@ -59,8 +83,11 @@ export default function LoginPage() {
           label={COPY.AUTH.PASSWORD_LABEL}
           placeholder={COPY.AUTH.PASSWORD_LABEL}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (fieldErrors.password) setFieldErrors((p) => ({ ...p, password: undefined }));
+          }}
+          error={fieldErrors.password}
           disabled={loading}
         />
 
