@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 type UserRow = { id: string; email: string; role: string; is_active: boolean };
+type FieldErrors = { email?: string; password?: string };
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState<UserRow[]>([]);
@@ -10,6 +11,7 @@ export default function AdminDashboard() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"subadmin" | "member">("member");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,14 +22,45 @@ export default function AdminDashboard() {
 
   useEffect(() => { fetchUsers(); }, []);
 
+  const validate = () => {
+    const errors: FieldErrors = {};
+    const trimmed = email.trim();
+
+    if (!trimmed) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      errors.email = "Please enter a valid email address.";
+    }
+
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (password.length < 8) {
+      errors.password = "Password must be at least 8 characters.";
+    } else if (!/[A-Z]/.test(password)) {
+      errors.password = "Password must include an uppercase letter.";
+    } else if (!/[0-9]/.test(password)) {
+      errors.password = "Password must include a number.";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const clearField = (field: keyof FieldErrors) => {
+    if (fieldErrors[field]) setFieldErrors((p) => ({ ...p, [field]: undefined }));
+  };
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); setSuccess(""); setLoading(true);
+    setError(""); setSuccess("");
 
+    if (!validate()) return;
+
+    setLoading(true);
     const res = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, role }),
+      body: JSON.stringify({ email: email.trim(), password, role }),
     });
 
     const data = await res.json();
@@ -36,9 +69,14 @@ export default function AdminDashboard() {
     if (!res.ok) { setError(data.error ?? "Failed to create user"); return; }
 
     setSuccess(`User ${data.email} created successfully.`);
-    setEmail(""); setPassword("");
+    setEmail(""); setPassword(""); setFieldErrors({});
     fetchUsers();
   };
+
+  const inputClass = (hasError?: string) =>
+    `bg-[#1A1F2E] border rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#28E88E]/50 ${
+      hasError ? "border-red-400" : "border-white/10"
+    }`;
 
   return (
     <div className="min-h-screen bg-[#020308] text-white p-6 sm:p-10">
@@ -54,22 +92,22 @@ export default function AdminDashboard() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                onChange={(e) => { setEmail(e.target.value); clearField("email"); }}
                 disabled={loading}
-                className="bg-[#1A1F2E] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#28E88E]/50"
+                className={inputClass(fieldErrors.email)}
               />
+              {fieldErrors.email && <p className="text-red-400 text-xs mt-0.5">{fieldErrors.email}</p>}
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-sm text-[#B3B3B3]">Password</label>
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                onChange={(e) => { setPassword(e.target.value); clearField("password"); }}
                 disabled={loading}
-                className="bg-[#1A1F2E] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#28E88E]/50"
+                className={inputClass(fieldErrors.password)}
               />
+              {fieldErrors.password && <p className="text-red-400 text-xs mt-0.5">{fieldErrors.password}</p>}
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-sm text-[#B3B3B3]">Role</label>
