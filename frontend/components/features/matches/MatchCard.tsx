@@ -2,6 +2,7 @@ import type { HKJCRace } from "@/types/race-meeting";
 
 type MatchCardProps = {
   race: HKJCRace;
+  index: number;
   isSelected: boolean;
   onClick: () => void;
 };
@@ -16,56 +17,35 @@ function formatTime(isoString: string) {
   });
 }
 
-function statusColor(status: string) {
-  if (status === "RESULTED") return "text-[#28E88E]";
-  if (status === "GOING") return "text-yellow-400";
-  if (status === "CLOSED") return "text-red-400";
-  return "text-white/60";
-}
-
-export function MatchCard({ race, isSelected, onClick }: MatchCardProps) {
+export function MatchCard({ race, index, isSelected, onClick }: MatchCardProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`w-[260px] min-w-[260px] shrink-0 rounded-xl border p-3 sm:w-auto sm:min-w-0 sm:p-4 text-left transition-all ${
+      className={`w-full text-left rounded-xl border-l-4 p-4 transition-all ${
         isSelected
-          ? "border-[#28E88E]/40 bg-gradient-to-br from-[#1a3328] via-[#1e3d2e] to-[#152a22] shadow-[0px_34px_74px_0px_#00000052]"
-          : "border-white/10 bg-[#1a1a1a] hover:bg-[#1f1f1f]"
+          ? "border-l-[#28E88E] shadow-[0px_34px_74px_0px_#00000052]"
+          : "border-l-[#2a2a2a] bg-[#141414] hover:bg-[#1a1a1a]"
       }`}
+      style={isSelected ? { background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.12) 100%)" } : undefined}
     >
-      <div className="flex items-center justify-between mb-2">
-        <span className="font-inter text-xs font-semibold text-[#28E88E] uppercase tracking-wide">
-          Race {race.no}
-        </span>
-        <span className={`font-inter text-[10px] font-medium uppercase ${statusColor(race.status)}`}>
-          {race.status}
-        </span>
-      </div>
-      <h3 className="font-inter text-sm font-semibold text-white mb-2 leading-tight truncate">
-        {race.raceName_en || `Race ${race.no}`}
+      <h3 className="font-inter text-sm font-bold text-white mb-3">
+        Match {index}: {race.raceName_en || `Race ${race.no}`}
       </h3>
-      <dl className="space-y-1 font-inter text-xs">
-        <div className="flex justify-between gap-2">
-          <span className="text-white/60">Post Time</span>
-          <span className="text-white">{formatTime(race.postTime)}</span>
-        </div>
-        <div className="flex justify-between gap-2">
-          <span className="text-white/60">Class</span>
-          <span className="text-white">{race.raceClass_en || "-"}</span>
-        </div>
-        <div className="flex justify-between gap-2">
-          <span className="text-white/60">Distance</span>
-          <span className="text-white">{race.distance ? `${race.distance}m` : "-"}</span>
-        </div>
-        <div className="flex justify-between gap-2">
-          <span className="text-white/60">Going</span>
-          <span className="text-[#28E88E]">{race.go_en || "-"}</span>
-        </div>
-        <div className="flex justify-between gap-2">
-          <span className="text-white/60">Runners</span>
-          <span className="text-white">{race.wageringFieldSize ?? race.runners?.length ?? "-"}</span>
-        </div>
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 font-inter text-xs">
+        <dt className="text-white/50">Front-runner bias</dt>
+        <dd className="text-right text-red-400 font-medium">Detected</dd>
+
+        <dt className="text-white/50">Class</dt>
+        <dd className="text-right text-white font-medium">
+          {race.distance ? `${race.distance}` : "-"} {race.raceTrack?.description_en || "Turf"}
+        </dd>
+
+        <dt className="text-white/50">Track</dt>
+        <dd className="text-right text-[#28E88E] font-medium">{race.go_en || "-"}</dd>
+
+        <dt className="text-white/50">Duration</dt>
+        <dd className="text-right text-white font-medium">{formatTime(race.postTime)}</dd>
       </dl>
     </button>
   );

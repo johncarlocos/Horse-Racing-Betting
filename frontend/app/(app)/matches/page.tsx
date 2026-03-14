@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MatchCard, RaceDetailPanel, OddsTable } from "@/components/features/matches";
+import { MatchCard, OddsTable } from "@/components/features/matches";
 import type { HKJCMeeting, HKJCRace } from "@/types/race-meeting";
 
 const VENUES = [
@@ -34,7 +34,6 @@ export default function MatchesPage() {
         const m = data?.[0] ?? null;
         setMeeting(m);
         setSelectedRace(m?.races?.[0] ?? null);
-        // Sync date picker if the server resolved a different date (e.g. next available meeting)
         if (m?.date && m.date !== date) setDate(m.date);
         setLoading(false);
       })
@@ -49,10 +48,9 @@ export default function MatchesPage() {
   }, [date, venue]);
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-white">
-      <main className="mx-auto w-full max-w-[1600px] space-y-4 sm:space-y-6 px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-
-        {/* Controls */}
+    <div className="h-[calc(100vh-80px)] overflow-hidden bg-[#0d0d0d] text-white flex flex-col">
+      {/* Controls - fixed at top */}
+      <div className="shrink-0 mx-auto w-full max-w-[1600px] px-3 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4 lg:px-8">
         <div className="flex flex-wrap items-center gap-3">
           <input
             type="date"
@@ -82,7 +80,10 @@ export default function MatchesPage() {
             </span>
           )}
         </div>
+      </div>
 
+      {/* Content area - fills remaining height */}
+      <div className="flex-1 min-h-0 mx-auto w-full max-w-[1600px] px-3 pb-4 sm:px-6 lg:px-8">
         {/* State feedback */}
         {loading && (
           <div className="flex items-center gap-2 text-white/50 text-sm py-4">
@@ -91,41 +92,33 @@ export default function MatchesPage() {
           </div>
         )}
         {error && <p className="text-red-400 text-sm">{error}</p>}
-        {!loading && !error && meeting && meeting.races.length === 0 && (
-          <p className="text-white/40 text-sm py-4">No races found for this date and venue.</p>
-        )}
         {!loading && !error && !meeting && (
           <p className="text-white/40 text-sm py-4">No meeting found for this date and venue.</p>
         )}
 
-        {/* Race cards */}
+        {/* Two-column layout: Match cards | Live Odds Matrix */}
         {meeting && meeting.races.length > 0 && (
-          <>
-            <section className="overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 scroll-smooth">
-              <div className="flex gap-3 sm:gap-4 min-w-max sm:min-w-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-                {meeting.races.map((race) => (
-                  <MatchCard
-                    key={race.id}
-                    race={race}
-                    isSelected={selectedRace?.id === race.id}
-                    onClick={() => setSelectedRace(race)}
-                  />
-                ))}
-              </div>
-            </section>
-
-            {/* Race detail + racecard */}
-            <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-3">
-              <div className="xl:col-span-1 min-w-0">
-                <RaceDetailPanel race={selectedRace} />
-              </div>
-              <div className="xl:col-span-2 min-w-0">
-                <OddsTable runners={selectedRace?.runners ?? []} />
-              </div>
+          <div className="flex flex-col lg:flex-row gap-6 h-full">
+            {/* Left: Match cards — scrolls independently */}
+            <div className="w-full lg:w-[280px] lg:min-w-[280px] flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto pb-2 lg:pb-4 lg:pr-1 scrollbar-green">
+              {meeting.races.map((race, i) => (
+                <MatchCard
+                  key={race.id}
+                  race={race}
+                  index={i + 1}
+                  isSelected={selectedRace?.id === race.id}
+                  onClick={() => setSelectedRace(race)}
+                />
+              ))}
             </div>
-          </>
+
+            {/* Right: Live Odds Matrix — scrolls independently */}
+            <div className="flex-1 min-w-0 overflow-y-auto scrollbar-green">
+              <OddsTable runners={selectedRace?.runners ?? []} />
+            </div>
+          </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

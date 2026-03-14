@@ -6,7 +6,28 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  html, body {
     @apply min-h-screen bg-black font-sans text-white antialiased;
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Thin green scrollbar for match list */
+  .scrollbar-green::-webkit-scrollbar {
+    width: 3px;
+  }
+  .scrollbar-green::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-green::-webkit-scrollbar-thumb {
+    background: #28E88E;
+    border-radius: 9999px;
+  }
+  .scrollbar-green {
+    scrollbar-width: thin;
+    scrollbar-color: #28E88E transparent;
   }
 }
