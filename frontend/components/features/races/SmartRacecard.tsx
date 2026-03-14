@@ -15,7 +15,7 @@ type SmartRacecardProps = {
 
 export function SmartRacecard({ racecard }: SmartRacecardProps) {
   return (
-    <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-3 sm:p-5 lg:p-6">
+    <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-3 sm:p-5 lg:p-6 h-full">
       <h2 className="font-inter text-base font-semibold text-white mb-3 sm:text-[22px] sm:mb-4">Smart Racecard</h2>
       <div className="overflow-x-auto -mx-1">
         <table className="w-full min-w-[640px] sm:min-w-[720px] font-inter text-xs sm:text-sm">

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { RaceStatBar, SmartRacecard, AnalyticsPanel } from "@/components/features/races";
+import { RaceStatBar, WinPercentage, SmartRacecard, AnalyticsPanel } from "@/components/features/races";
 import { MOCK_RACE, MOCK_RACECARD, PEDIGREE_VALUES, RADAR_LABELS, DONUT_SEGMENTS, WIN_PCT } from "@/lib/mock-data";
 import { ROUTES } from "@/lib/constants";
 
@@ -65,8 +65,16 @@ export default function RaceDetailPage() {
           </span>
         </section>
 
+        {/* Stat bar */}
         <RaceStatBar race={race} />
-        <SmartRacecard racecard={MOCK_RACECARD} />
+
+        {/* Win Percentage + Smart Racecard — side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-4 sm:gap-6">
+          <WinPercentage racecard={MOCK_RACECARD} />
+          <SmartRacecard racecard={MOCK_RACECARD} />
+        </div>
+
+        {/* Analytics: Pedigree, AI Win, Market Activity */}
         <AnalyticsPanel
           pedigreeValues={PEDIGREE_VALUES}
           radarLabels={RADAR_LABELS}
