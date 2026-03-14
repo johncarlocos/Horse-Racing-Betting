@@ -255,7 +255,7 @@ export default function RaceDetailPage() {
 
         {/* Win Percentage + Smart Racecard — side by side */}
         {analysis && racecard.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-[35%_calc(65%-1.5rem)] gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[30%_calc(70%-1.5rem)] gap-4 sm:gap-6">
             <WinPercentage racecard={top4} />
             <SmartRacecard racecard={racecard} />
           </div>
