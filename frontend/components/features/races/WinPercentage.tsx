@@ -45,16 +45,16 @@ export function WinPercentage({ racecard }: WinPercentageProps) {
         {/* Track visual */}
         <div className="relative">
           <Image src={RACE_VECTOR} alt="Race track" width={220} height={400} className="w-full max-w-[220px]" />
-          <div className="absolute top-[14%] left-[22%] hidden xl:block pointer-events-none">
+          <div className="absolute top-[16%] left-[24%] hidden xl:block pointer-events-none">
             <Image src={RACE_BAR1} alt="" width={60} height={16} className="object-contain" />
           </div>
-          <div className="absolute top-[34%] left-[48%] hidden xl:block pointer-events-none">
+          <div className="absolute top-[34%] left-[56%] hidden xl:block pointer-events-none">
             <Image src={RACE_BAR2} alt="" width={24} height={16} className="object-contain" />
           </div>
-          <div className="absolute top-[54%] left-[55%] hidden xl:block pointer-events-none">
+          <div className="absolute top-[58%] left-[66%] hidden xl:block pointer-events-none">
             <Image src={RACE_BAR3} alt="" width={24} height={16} className="object-contain" />
           </div>
-          <div className="absolute top-[74%] left-[36%] hidden xl:block pointer-events-none">
+          <div className="absolute top-[78%] left-[46%] hidden xl:block pointer-events-none">
             <Image src={RACE_BAR4} alt="" width={24} height={16} className="object-contain" />
           </div>
         </div>
@@ -72,19 +72,18 @@ export function WinPercentage({ racecard }: WinPercentageProps) {
                 >
                   {POSITION_LABELS[idx + 1]}
                 </span>
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="font-inter font-semibold text-sm text-white truncate">
+                <div className="min-w-0 flex-1">
+                  <span className="font-inter font-semibold text-sm text-white whitespace-nowrap block">
                     {row.horse}
                   </span>
-                  <span className="font-inter text-[11px] text-white/50">
-                    Gold Highlight
-                  </span>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="font-inter text-[11px] text-white/50">Win Rate</p>
-                  <p className="font-inter font-semibold text-sm text-[#28E88E]">
-                    {row.winPct}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="font-inter text-[11px] text-white/50">
+                      Gold Highlight
+                    </span>
+                    <span className="font-inter font-semibold text-sm text-[#28E88E]">
+                      {row.winPct}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
