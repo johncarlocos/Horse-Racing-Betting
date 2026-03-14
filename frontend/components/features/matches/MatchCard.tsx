@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { HKJCRace } from "@/types/race-meeting";
+import { ROUTES } from "@/lib/constants";
 
 type MatchCardProps = {
   race: HKJCRace;
@@ -19,10 +21,12 @@ function formatTime(isoString: string) {
 
 export function MatchCard({ race, index, isSelected, onClick }: MatchCardProps) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
-      className={`w-full text-left rounded-xl border-l-4 p-4 transition-all ${
+      onKeyDown={(e) => { if (e.key === "Enter") onClick(); }}
+      className={`w-full text-left rounded-xl border-l-4 p-4 transition-all cursor-pointer ${
         isSelected
           ? "border-l-[#28E88E] shadow-[0px_34px_74px_0px_#00000052]"
           : "border-l-[#2a2a2a] bg-[#141414] hover:bg-[#1a1a1a]"
@@ -46,7 +50,18 @@ export function MatchCard({ race, index, isSelected, onClick }: MatchCardProps) 
 
         <dt className="text-white/50">Duration</dt>
         <dd className="text-right text-white font-medium">{formatTime(race.postTime)}</dd>
+
+        <dt className="text-white/50">Win Rate</dt>
+        <dd className="text-right">
+          <Link
+            href={ROUTES.RACE(race.id)}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-block rounded-md border border-[#28E88E] px-3 py-1 text-[#28E88E] text-xs font-medium hover:bg-[#28E88E] hover:text-[#020308] transition-colors no-underline"
+          >
+            View Details
+          </Link>
+        </dd>
       </dl>
-    </button>
+    </div>
   );
 }
