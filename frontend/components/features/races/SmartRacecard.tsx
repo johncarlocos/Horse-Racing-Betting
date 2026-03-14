@@ -17,8 +17,8 @@ export function SmartRacecard({ racecard }: SmartRacecardProps) {
   return (
     <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-3 sm:p-5 lg:p-6 h-full">
       <h2 className="font-inter text-base font-semibold text-white mb-3 sm:text-[22px] sm:mb-4">Smart Racecard</h2>
-      <div className="overflow-x-auto -mx-1">
-        <table className="w-full min-w-[640px] sm:min-w-[720px] font-inter text-xs sm:text-sm">
+      <div className="overflow-hidden -mx-1">
+        <table className="w-full font-inter text-xs sm:text-sm table-fixed">
           <thead>
             <tr className="border-b border-white/10 text-left text-white/70 align-middle">
               <th className="pb-2 pr-2 font-medium text-xs whitespace-nowrap sm:pb-3 sm:pr-4 sm:text-[12.5px]">Rank</th>
@@ -41,10 +41,10 @@ export function SmartRacecard({ racecard }: SmartRacecardProps) {
                     {row.rank}
                   </span>
                 </td>
-                <td className="align-middle py-2.5 pr-2 sm:py-3 sm:pr-4">
+                <td className="align-middle py-2.5 pr-2 sm:py-3 sm:pr-4 max-w-[200px]">
                   <div className="min-w-0">
                     <p className="font-medium text-white truncate">{row.horse}</p>
-                    <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 truncate">
+                    <p className="text-white/60 text-[10px] sm:text-xs mt-0.5 line-clamp-1">
                       {row.age} · {row.sire}
                     </p>
                   </div>

@@ -2,17 +2,189 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { RaceStatBar, WinPercentage, SmartRacecard, AnalyticsPanel } from "@/components/features/races";
-import { MOCK_RACE, MOCK_RACECARD, PEDIGREE_VALUES, RADAR_LABELS, DONUT_SEGMENTS, WIN_PCT } from "@/lib/mock-data";
 import { ROUTES } from "@/lib/constants";
+import type { HKJCMeeting, HKJCRace } from "@/types/race-meeting";
+import type { Race, RacecardRow } from "@/types";
 
 const RACE_HORSE = "/assets/race-horse.png";
 
+type GeminiPick = {
+  no: string;
+  name: string;
+  winPct: string;
+  speed: number;
+  class: number;
+  surface: number;
+  distance: number;
+  form: number;
+  analysis: string;
+};
+
+type GeminiAnalysis = {
+  topPicks: GeminiPick[];
+  overallWinPct: number;
+  riskLevel: string;
+};
+
+function formatTime(iso: string) {
+  if (!iso) return "-";
+  return new Date(iso).toLocaleTimeString("en-HK", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Hong_Kong",
+  });
+}
+
+function mapToRace(hkjcRace: HKJCRace): Race {
+  const runners = hkjcRace.runners?.filter((r) => r.status !== "Scratched") ?? [];
+  const odds = runners.map((r) => parseFloat(r.winOdds)).filter((o) => !isNaN(o));
+  const minOdds = odds.length > 0 ? Math.min(...odds) : 0;
+  const maxOdds = odds.length > 0 ? Math.max(...odds) : 0;
+
+  return {
+    id: hkjcRace.id,
+    raceNumber: hkjcRace.no,
+    name: hkjcRace.raceName_en || `Race ${hkjcRace.no}`,
+    venue: `${hkjcRace.raceCourse?.description_en || ""} ${hkjcRace.raceTrack?.description_en || ""}`.trim(),
+    time: formatTime(hkjcRace.postTime),
+    distance: `${hkjcRace.distance}m`,
+    going: hkjcRace.go_en || "-",
+    status: hkjcRace.status === "RESULTED" ? "FINISHED" : hkjcRace.status === "GOING" ? "LIVE" : "UPCOMING",
+    prizePool: "-",
+    fieldSize: `${runners.length} Horses`,
+    topFavourite: minOdds > 0 ? minOdds.toFixed(1) : "-",
+    longshot: maxOdds > 0 ? maxOdds.toFixed(1) : "-",
+  };
+}
+
+function mapToRacecard(picks: GeminiPick[], hkjcRace: HKJCRace): RacecardRow[] {
+  return picks.map((pick, idx) => {
+    const runner = hkjcRace.runners?.find((r) => r.no === pick.no);
+    return {
+      rank: idx + 1,
+      horse: pick.name,
+      age: "-",
+      sire: pick.analysis,
+      jockey: runner?.jockey?.name_en ?? "-",
+      trainer: runner?.trainer?.name_en ?? "-",
+      turf: hkjcRace.raceCourse?.description_en ?? "-",
+      speed: pick.speed,
+      class: pick.class,
+      winPct: pick.winPct,
+      betStatus: idx === 0 ? "Closed" as const : "Accepting" as const,
+    };
+  });
+}
+
 export default function RaceDetailPage() {
   const params = useParams();
-  const _id = (params?.id as string) ?? "1";
-  const race = MOCK_RACE;
+  const searchParams = useSearchParams();
+  const raceId = (params?.id as string) ?? "";
+  const date = searchParams.get("date") ?? "";
+  const venue = searchParams.get("venue") ?? "";
+
+  const [hkjcRace, setHkjcRace] = useState<HKJCRace | null>(null);
+  const [analysis, setAnalysis] = useState<GeminiAnalysis | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [aiError, setAiError] = useState("");
+  const [error, setError] = useState("");
+
+  // 1. Fetch HKJC meeting data and find the race
+  useEffect(() => {
+    if (!date || !venue) {
+      setError("Missing race context. Go back to matches.");
+      setLoading(false);
+      return;
+    }
+
+    fetch(`/api/races/meetings?date=${date}&venue=${venue}`)
+      .then((r) => r.json())
+      .then((meetings: HKJCMeeting[]) => {
+        for (const m of meetings) {
+          const found = m.races?.find((r) => r.id === raceId);
+          if (found) {
+            setHkjcRace(found);
+            setLoading(false);
+            return;
+          }
+        }
+        setError("Race not found.");
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load race data.");
+        setLoading(false);
+      });
+  }, [raceId, date, venue]);
+
+  // 2. Once we have the race, call Gemini for analysis
+  useEffect(() => {
+    if (!hkjcRace) return;
+    setAnalyzing(true);
+
+    fetch("/api/races/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(hkjcRace),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.error) {
+          setAiError(data.error);
+        } else {
+          setAnalysis(data);
+        }
+        setAnalyzing(false);
+      })
+      .catch(() => {
+        setAiError("Failed to connect to AI service.");
+        setAnalyzing(false);
+      });
+  }, [hkjcRace]);
+
+  // Loading states
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0d0d0d] text-white flex items-center justify-center">
+        <div className="flex items-center gap-3 text-white/60">
+          <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-[#28E88E]" />
+          Loading race data…
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !hkjcRace) {
+    return (
+      <div className="min-h-screen bg-[#0d0d0d] text-white flex flex-col items-center justify-center gap-4">
+        <p className="text-red-400">{error || "Race not found"}</p>
+        <Link href={ROUTES.MATCHES} className="text-[#28E88E] hover:underline">
+          Back to Matches
+        </Link>
+      </div>
+    );
+  }
+
+  const race = mapToRace(hkjcRace);
+  const racecard = analysis ? mapToRacecard(analysis.topPicks, hkjcRace) : [];
+  const top4 = racecard.slice(0, 4);
+
+  // Pedigree values from top pick
+  const topPick = analysis?.topPicks?.[0];
+  const pedigreeValues = topPick
+    ? [topPick.surface, topPick.speed, topPick.class, topPick.distance, topPick.form]
+    : [0, 0, 0, 0, 0];
+  const radarLabels = ["Surface", "Speed", "Class", "Distance", "Form"];
+
+  const winPct = analysis?.overallWinPct ?? 0;
+  const donutSegments = analysis?.topPicks
+    ? analysis.topPicks.slice(1, 5).map((p) => parseFloat(p.winPct) || 0)
+    : [0, 0, 0, 0];
 
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white">
@@ -68,19 +240,36 @@ export default function RaceDetailPage() {
         {/* Stat bar */}
         <RaceStatBar race={race} />
 
+        {/* AI Analysis loading */}
+        {analyzing && (
+          <div className="flex items-center gap-3 rounded-xl border border-[#28E88E]/20 bg-[#1a2e23] p-4">
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#28E88E]/30 border-t-[#28E88E]" />
+            <span className="text-[#28E88E] font-inter text-sm">AI is analyzing this race…</span>
+          </div>
+        )}
+        {aiError && (
+          <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
+            <p className="text-red-400 font-inter text-sm">{aiError}</p>
+          </div>
+        )}
+
         {/* Win Percentage + Smart Racecard — side by side */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-4 sm:gap-6">
-          <WinPercentage racecard={MOCK_RACECARD} />
-          <SmartRacecard racecard={MOCK_RACECARD} />
-        </div>
+        {analysis && racecard.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-[35%_calc(65%-1.5rem)] gap-4 sm:gap-6">
+            <WinPercentage racecard={top4} />
+            <SmartRacecard racecard={racecard} />
+          </div>
+        )}
 
         {/* Analytics: Pedigree, AI Win, Market Activity */}
-        <AnalyticsPanel
-          pedigreeValues={PEDIGREE_VALUES}
-          radarLabels={RADAR_LABELS}
-          winPct={WIN_PCT}
-          donutSegments={DONUT_SEGMENTS}
-        />
+        {analysis && (
+          <AnalyticsPanel
+            pedigreeValues={pedigreeValues}
+            radarLabels={radarLabels}
+            winPct={winPct}
+            donutSegments={donutSegments}
+          />
+        )}
       </main>
     </div>
   );

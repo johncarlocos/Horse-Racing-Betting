@@ -108,6 +108,8 @@ export default function MatchesPage() {
                   index={i + 1}
                   isSelected={selectedRace?.id === race.id}
                   onClick={() => setSelectedRace(race)}
+                  meetingDate={meeting.date}
+                  venueCode={meeting.venueCode}
                 />
               ))}
             </div>

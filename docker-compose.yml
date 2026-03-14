@@ -35,12 +35,16 @@ services:
       args:
         BACKEND_URL: http://backend:8000
         JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+        GEMINI_API_KEY: ${GEMINI_API_KEY}
+        GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
     restart: unless-stopped
     depends_on:
       - backend
     environment:
       BACKEND_URL: http://backend:8000
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
     expose:
       - "3000"
     networks:

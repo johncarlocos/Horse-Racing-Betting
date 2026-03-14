@@ -7,6 +7,8 @@ type MatchCardProps = {
   index: number;
   isSelected: boolean;
   onClick: () => void;
+  meetingDate: string;
+  venueCode: string;
 };
 
 function formatTime(isoString: string) {
@@ -19,7 +21,7 @@ function formatTime(isoString: string) {
   });
 }
 
-export function MatchCard({ race, index, isSelected, onClick }: MatchCardProps) {
+export function MatchCard({ race, index, isSelected, onClick, meetingDate, venueCode }: MatchCardProps) {
   return (
     <div
       role="button"
@@ -54,7 +56,7 @@ export function MatchCard({ race, index, isSelected, onClick }: MatchCardProps) 
         <dt className="text-white/50">Win Rate</dt>
         <dd className="text-right">
           <Link
-            href={ROUTES.RACE(race.id)}
+            href={`${ROUTES.RACE(race.id)}?date=${meetingDate}&venue=${venueCode}`}
             onClick={(e) => e.stopPropagation()}
             className="inline-block rounded-md border border-[#28E88E] px-3 py-1 text-[#28E88E] text-xs font-medium hover:bg-[#28E88E] hover:text-[#020308] transition-colors no-underline"
           >
