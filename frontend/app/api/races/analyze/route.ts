@@ -109,35 +109,60 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 2. Call Gemini AI
+    // 2. Call Gemini AI with retry for rate limits
     console.log(`[ANALYZE] Cache miss for ${race.id} — calling Gemini`);
     const prompt = buildPrompt(race);
-
-    const geminiRes = await fetch(GEMINI_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 16384,
-          responseMimeType: "application/json",
-        },
-      }),
+    const geminiBody = JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 16384,
+        responseMimeType: "application/json",
+      },
     });
 
-    if (!geminiRes.ok) {
-      const errData = await geminiRes.json().catch(() => null);
-      const msg = errData?.error?.message ?? `HTTP ${geminiRes.status}`;
-      console.error("Gemini API error:", msg);
+    let geminiRes: Response | null = null;
+    let lastError = "";
 
-      if (msg.includes("location is not supported")) {
-        return NextResponse.json(
-          { error: "Gemini API is not available in your server's region. Deploy to a supported region or use a VPN." },
-          { status: 503 }
-        );
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        geminiRes = await fetch(GEMINI_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: geminiBody,
+        });
+
+        if (geminiRes.ok) break;
+
+        const errData = await geminiRes.json().catch(() => null);
+        lastError = errData?.error?.message ?? `HTTP ${geminiRes.status}`;
+
+        if (lastError.includes("location is not supported")) {
+          return NextResponse.json(
+            { error: "Gemini API is not available in your server's region." },
+            { status: 503 }
+          );
+        }
+
+        // Retry on rate limit (429) or server overload (503)
+        if (geminiRes.status === 429 || geminiRes.status === 503) {
+          console.log(`[ANALYZE] Gemini rate limited (attempt ${attempt + 1}/3), retrying in ${(attempt + 1) * 5}s...`);
+          await new Promise((r) => setTimeout(r, (attempt + 1) * 5000));
+          continue;
+        }
+
+        // Non-retryable error
+        break;
+      } catch (fetchErr) {
+        lastError = (fetchErr as Error).message;
+        console.error(`[ANALYZE] Gemini fetch error (attempt ${attempt + 1}/3):`, lastError);
+        await new Promise((r) => setTimeout(r, (attempt + 1) * 3000));
       }
-      return NextResponse.json({ error: `AI analysis failed: ${msg}` }, { status: 502 });
+    }
+
+    if (!geminiRes || !geminiRes.ok) {
+      console.error("Gemini API failed after retries:", lastError);
+      return NextResponse.json({ error: `AI analysis failed: ${lastError}` }, { status: 502 });
     }
 
     const geminiData = await geminiRes.json();

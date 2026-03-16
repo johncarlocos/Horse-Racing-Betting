@@ -123,9 +123,12 @@ export default function RaceDetailPage() {
   }, [raceId, date, venue]);
 
   // 2. Once we have the race, call Gemini for analysis
+  const [retryCount, setRetryCount] = useState(0);
+
   useEffect(() => {
     if (!hkjcRace) return;
     setAnalyzing(true);
+    setAiError("");
 
     fetch("/api/races/analyze", {
       method: "POST",
@@ -145,7 +148,7 @@ export default function RaceDetailPage() {
         setAiError("Failed to connect to AI service.");
         setAnalyzing(false);
       });
-  }, [hkjcRace]);
+  }, [hkjcRace, retryCount]);
 
   // Loading states
   if (loading) {
@@ -248,8 +251,15 @@ export default function RaceDetailPage() {
           </div>
         )}
         {aiError && (
-          <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
+          <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4 flex items-center justify-between">
             <p className="text-red-400 font-inter text-sm">{aiError}</p>
+            <button
+              type="button"
+              onClick={() => setRetryCount((c) => c + 1)}
+              className="shrink-0 ml-4 px-4 py-1.5 rounded-lg bg-[#28E88E] text-[#020308] text-sm font-semibold hover:bg-[#28E88E]/90 transition"
+            >
+              Retry
+            </button>
           </div>
         )}
 
