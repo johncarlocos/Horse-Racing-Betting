@@ -27,7 +27,12 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY ?? "");
+    const jwtKey = process.env.JWT_SECRET_KEY;
+    if (!jwtKey) {
+      console.error("[MIDDLEWARE] JWT_SECRET_KEY is NOT set! Allowing request through.");
+      return NextResponse.next();
+    }
+    const secret = new TextEncoder().encode(jwtKey);
     const { payload } = await jwtVerify(token, secret);
     const role = payload.role as string | undefined;
 
@@ -40,7 +45,8 @@ export async function middleware(request: NextRequest) {
     }
 
     return NextResponse.next();
-  } catch {
+  } catch (err) {
+    console.error("[MIDDLEWARE] JWT verification failed for", pathname, "error:", (err as Error).message);
     const response = NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
     response.cookies.set("auth_token", "", { maxAge: 0, path: "/" });
     return response;
