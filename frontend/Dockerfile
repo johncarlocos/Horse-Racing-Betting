@@ -35,12 +35,12 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --chown=nextjs:nodejs docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Next.js standalone reads runtime env vars from process.env,
-# but edge middleware needs them written to .env.production at startup
-CMD ["sh", "-c", "echo \"JWT_SECRET_KEY=$JWT_SECRET_KEY\nBACKEND_URL=$BACKEND_URL\nGEMINI_API_KEY=$GEMINI_API_KEY\nGEMINI_MODEL=$GEMINI_MODEL\" > .env.production && node server.js"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
