@@ -62,6 +62,7 @@ export function HeroSection() {
                 )}
                 <Link
                   href={ROUTES.MATCHES}
+                  prefetch={false}
                   className="inline-flex h-[54px] items-center justify-center rounded-full border border-white/50 bg-black/40 lg:bg-transparent px-6 py-[17px] font-inter text-[16px] font-normal leading-[1.4] tracking-[0] text-white lg:border-white/40 lg:px-8 no-underline"
                 >
                   View Live Matches
