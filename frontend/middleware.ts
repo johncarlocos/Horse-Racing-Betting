@@ -18,9 +18,11 @@ export async function middleware(request: NextRequest) {
   }
 
   const token = request.cookies.get("auth_token")?.value;
+  const allCookies = request.cookies.getAll().map((c) => c.name);
+  console.log("[MIDDLEWARE]", pathname, "| token:", token ? "YES" : "NO", "| cookies:", allCookies.join(",") || "NONE");
 
   if (!token) {
-    // Route to appropriate login
+    console.log("[MIDDLEWARE] No token → redirecting to login");
     if (pathname.startsWith("/admin")) return NextResponse.redirect(new URL(ROUTES.ADMIN_LOGIN, request.url));
     if (pathname.startsWith("/subadmin")) return NextResponse.redirect(new URL(ROUTES.SUBADMIN_LOGIN, request.url));
     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
