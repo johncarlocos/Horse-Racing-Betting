@@ -41,4 +41,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Next.js standalone reads runtime env vars from process.env,
+# but edge middleware needs them written to .env.production at startup
+CMD ["sh", "-c", "echo \"JWT_SECRET_KEY=$JWT_SECRET_KEY\nBACKEND_URL=$BACKEND_URL\nGEMINI_API_KEY=$GEMINI_API_KEY\nGEMINI_MODEL=$GEMINI_MODEL\" > .env.production && node server.js"]
