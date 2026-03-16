@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { RaceStatBar, WinPercentage, SmartRacecard, AnalyticsPanel } from "@/components/features/races";
+import { WinPercentage, SmartRacecard, AnalyticsPanel } from "@/components/features/races";
 import { ROUTES } from "@/lib/constants";
 import type { HKJCMeeting, HKJCRace } from "@/types/race-meeting";
 import type { Race, RacecardRow } from "@/types";
@@ -240,8 +240,7 @@ export default function RaceDetailPage() {
           </span>
         </section>
 
-        {/* Stat bar */}
-        <RaceStatBar race={race} />
+        {/* Stat bar removed */}
 
         {/* AI Analysis loading */}
         {analyzing && (
@@ -267,7 +266,9 @@ export default function RaceDetailPage() {
         {analysis && racecard.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-[30%_calc(70%-1.5rem)] gap-4 sm:gap-6">
             <WinPercentage racecard={top4} />
-            <SmartRacecard racecard={racecard} />
+            <div className="hidden lg:block">
+              <SmartRacecard racecard={racecard} />
+            </div>
           </div>
         )}
 

@@ -49,15 +49,9 @@ export default function MatchesPage() {
 
   return (
     <div className="h-[calc(100vh-80px)] overflow-hidden bg-[#0d0d0d] text-white flex flex-col">
-      {/* Controls - fixed at top */}
+      {/* Controls */}
       <div className="shrink-0 mx-auto w-full max-w-[1600px] px-3 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4 lg:px-8">
         <div className="flex flex-wrap items-center gap-3">
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-[#28E88E]/50 [&::-webkit-calendar-picker-indicator]:invert"
-          />
           <div className="flex gap-2">
             {VENUES.map((v) => (
               <button
@@ -82,7 +76,7 @@ export default function MatchesPage() {
         </div>
       </div>
 
-      {/* Content area - fills remaining height */}
+      {/* Content area */}
       <div className="flex-1 min-h-0 mx-auto w-full max-w-[1600px] px-3 pb-4 sm:px-6 lg:px-8">
         {/* State feedback */}
         {loading && (
@@ -96,11 +90,11 @@ export default function MatchesPage() {
           <p className="text-white/40 text-sm py-4">No meeting found for this date and venue.</p>
         )}
 
-        {/* Two-column layout: Match cards | Live Odds Matrix */}
+        {/* Match cards + Live Odds Matrix */}
         {meeting && meeting.races.length > 0 && (
-          <div className="flex flex-col lg:flex-row gap-6 h-full">
-            {/* Left: Match cards — scrolls independently */}
-            <div className="w-full lg:w-[280px] lg:min-w-[280px] flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto pb-2 lg:pb-4 lg:pr-1 scrollbar-green">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 h-full">
+            {/* Match cards — vertical scroll on both mobile and desktop */}
+            <div className="w-full lg:w-[280px] lg:min-w-[280px] flex flex-col gap-3 overflow-y-auto lg:pb-4 lg:pr-1 scrollbar-green">
               {meeting.races.map((race, i) => (
                 <MatchCard
                   key={race.id}
@@ -114,8 +108,8 @@ export default function MatchesPage() {
               ))}
             </div>
 
-            {/* Right: Live Odds Matrix — scrolls independently */}
-            <div className="flex-1 min-w-0 overflow-y-auto scrollbar-green">
+            {/* Live Odds Matrix — hidden on mobile */}
+            <div className="hidden lg:block flex-1 min-w-0 overflow-y-auto scrollbar-green">
               <OddsTable runners={selectedRace?.runners ?? []} />
             </div>
           </div>
