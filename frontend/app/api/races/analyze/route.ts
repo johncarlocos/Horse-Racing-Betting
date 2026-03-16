@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY ?? "";
 const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
 
 type RunnerInput = {
   no: string;
@@ -18,6 +19,7 @@ type RunnerInput = {
 };
 
 type RaceInput = {
+  id: string;
   no: number;
   raceName_en: string;
   distance: number;
@@ -88,8 +90,27 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const race: RaceInput = await request.json();
+    const body = await request.json();
+    const race: RaceInput = body.race ?? body;
+    const date: string = body.date ?? "";
+    const venue: string = body.venue ?? "";
 
+    // 1. Check PostgreSQL cache via backend API
+    if (race.id) {
+      try {
+        const cacheRes = await fetch(`${BACKEND_URL}/api/v1/analyses/${race.id}`);
+        if (cacheRes.ok) {
+          const cached = await cacheRes.json();
+          console.log(`[ANALYZE] Cache hit for ${race.id}`);
+          return NextResponse.json(cached.analysis_json);
+        }
+      } catch {
+        // Backend unavailable — continue to Gemini
+      }
+    }
+
+    // 2. Call Gemini AI
+    console.log(`[ANALYZE] Cache miss for ${race.id} — calling Gemini`);
     const prompt = buildPrompt(race);
 
     const geminiRes = await fetch(GEMINI_URL, {
@@ -110,7 +131,6 @@ export async function POST(request: NextRequest) {
       const msg = errData?.error?.message ?? `HTTP ${geminiRes.status}`;
       console.error("Gemini API error:", msg);
 
-      // Location-based restriction
       if (msg.includes("location is not supported")) {
         return NextResponse.json(
           { error: "Gemini API is not available in your server's region. Deploy to a supported region or use a VPN." },
@@ -121,22 +141,33 @@ export async function POST(request: NextRequest) {
     }
 
     const geminiData = await geminiRes.json();
-
-    // Check if the response was truncated
     const finishReason = geminiData?.candidates?.[0]?.finishReason;
-    const text =
-      geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     if (!text) {
       console.error("Gemini returned empty response. finishReason:", finishReason);
       return NextResponse.json({ error: "AI returned empty analysis" }, { status: 502 });
     }
 
-    // Parse the JSON response from Gemini
     const cleaned = text.replace(/```json\n?|```\n?/g, "").trim();
 
     try {
       const analysis = JSON.parse(cleaned);
+
+      // 3. Save to PostgreSQL via backend API (fire-and-forget)
+      if (race.id) {
+        fetch(`${BACKEND_URL}/api/v1/analyses/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            race_id: race.id,
+            race_date: date,
+            venue_code: venue,
+            analysis_json: analysis,
+          }),
+        }).catch((e) => console.error("Failed to cache analysis:", e));
+      }
+
       return NextResponse.json(analysis);
     } catch (parseErr) {
       console.error("Failed to parse Gemini JSON. finishReason:", finishReason, "text length:", text.length);

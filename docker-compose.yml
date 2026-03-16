@@ -14,6 +14,15 @@ services:
       timeout: 3s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   backend:
     build: ./backend
     restart: unless-stopped
@@ -40,11 +49,13 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
+      - redis
     environment:
       BACKEND_URL: http://backend:8000
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      REDIS_URL: redis://redis:6379
     expose:
       - "3000"
     networks:

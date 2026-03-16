@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import redis from "@/lib/redis";
+
+const CACHE_TTL = 300; // 5 minutes
 
 const HKJC_URL = "https://info.cld.hkjc.com/graphql/base/";
 
@@ -216,7 +219,19 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const date = searchParams.get("date") ?? new Date().toISOString().slice(0, 10);
   const venue = searchParams.get("venue") ?? "ST";
+  const cacheKey = `meetings:${date}:${venue}`;
 
+  // 1. Check Redis cache
+  try {
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      return NextResponse.json(JSON.parse(cached));
+    }
+  } catch {
+    // Redis unavailable — continue with direct fetch
+  }
+
+  // 2. Fetch from HKJC
   try {
     const data = await fetchHKJC({ date, venueCode: venue });
 
@@ -231,6 +246,8 @@ export async function GET(request: NextRequest) {
       );
 
     if (meetings.length > 0) {
+      // Cache and return
+      try { await redis.set(cacheKey, JSON.stringify(meetings), "EX", CACHE_TTL); } catch {}
       return NextResponse.json(meetings);
     }
 
@@ -253,6 +270,12 @@ export async function GET(request: NextRequest) {
     const fallbackMeetings = (fallback.data?.raceMeetings ?? []).filter(
       (m: { venueCode: string }) => LOCAL_VENUES.has(m.venueCode)
     );
+
+    // Cache with the actual meeting date as key
+    if (fallbackMeetings.length > 0) {
+      const actualKey = `meetings:${nextMeeting.date}:${venue}`;
+      try { await redis.set(actualKey, JSON.stringify(fallbackMeetings), "EX", CACHE_TTL); } catch {}
+    }
 
     return NextResponse.json(fallbackMeetings);
   } catch (e) {

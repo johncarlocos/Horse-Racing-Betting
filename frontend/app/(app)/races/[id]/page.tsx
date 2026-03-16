@@ -130,7 +130,7 @@ export default function RaceDetailPage() {
     fetch("/api/races/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(hkjcRace),
+      body: JSON.stringify({ race: hkjcRace, date, venue }),
     })
       .then((r) => r.json())
       .then((data) => {
