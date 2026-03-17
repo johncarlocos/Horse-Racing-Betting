@@ -5,11 +5,13 @@ import { useState } from "react";
 import { AuthFormLayout, PasswordField, TextField } from "@/components/auth";
 import { PrimaryButton } from "@/components/ui";
 import { useAuth } from "@/lib/context/AuthContext";
-import { COPY, ROUTES } from "@/lib/constants";
+import { useLanguage } from "@/lib/context/LanguageContext";
+import { ROUTES } from "@/lib/constants";
 
 export default function SubadminLoginPage() {
   const router = useRouter();
   const { refreshAuth } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -44,15 +46,15 @@ export default function SubadminLoginPage() {
         Subadmin Login
       </h2>
       <p className="font-inter text-[14px] sm:text-[16px] font-light text-[#B3B3B3] mb-6 sm:mb-8">
-        {COPY.AUTH.LOGIN_WELCOME}
+        {t.auth.loginWelcome}
       </p>
 
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <TextField
           id="email"
-          label={COPY.AUTH.EMAIL_LABEL}
+          label={t.auth.email}
           type="email"
-          placeholder={COPY.AUTH.EMAIL_LABEL}
+          placeholder={t.auth.email}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -60,8 +62,8 @@ export default function SubadminLoginPage() {
         />
         <PasswordField
           id="password"
-          label={COPY.AUTH.PASSWORD_LABEL}
-          placeholder={COPY.AUTH.PASSWORD_LABEL}
+          label={t.auth.password}
+          placeholder={t.auth.password}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -81,7 +83,7 @@ export default function SubadminLoginPage() {
               Logging in…
             </span>
           ) : (
-            COPY.AUTH.LOGIN_CTA
+            t.auth.loginCta
           )}
         </PrimaryButton>
       </form>

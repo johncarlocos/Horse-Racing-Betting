@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { WinPercentage, SmartRacecard, AnalyticsPanel } from "@/components/features/races";
 import { ROUTES } from "@/lib/constants";
+import { useLanguage } from "@/lib/context/LanguageContext";
 import type { HKJCMeeting, HKJCRace } from "@/types/race-meeting";
 import type { Race, RacecardRow } from "@/types";
 
@@ -81,6 +82,7 @@ function mapToRacecard(picks: GeminiPick[], hkjcRace: HKJCRace): RacecardRow[] {
 }
 
 export default function RaceDetailPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const searchParams = useSearchParams();
   const raceId = (params?.id as string) ?? "";
@@ -97,7 +99,7 @@ export default function RaceDetailPage() {
   // 1. Fetch HKJC meeting data and find the race
   useEffect(() => {
     if (!date || !venue) {
-      setError("Missing race context. Go back to matches.");
+      setError("missing");
       setLoading(false);
       return;
     }
@@ -113,11 +115,11 @@ export default function RaceDetailPage() {
             return;
           }
         }
-        setError("Race not found.");
+        setError("notfound");
         setLoading(false);
       })
       .catch(() => {
-        setError("Failed to load race data.");
+        setError("failed");
         setLoading(false);
       });
   }, [raceId, date, venue]);
@@ -145,7 +147,7 @@ export default function RaceDetailPage() {
         setAnalyzing(false);
       })
       .catch(() => {
-        setAiError("Failed to connect to AI service.");
+        setAiError(t.races.failedAi);
         setAnalyzing(false);
       });
   }, [hkjcRace, retryCount]);
@@ -165,9 +167,11 @@ export default function RaceDetailPage() {
   if (error || !hkjcRace) {
     return (
       <div className="min-h-screen bg-[#0d0d0d] text-white flex flex-col items-center justify-center gap-4">
-        <p className="text-red-400">{error || "Race not found"}</p>
+        <p className="text-red-400">
+          {error === "missing" ? t.races.missingContext : error === "notfound" ? t.races.raceNotFound : t.races.failedToLoad}
+        </p>
         <Link href={ROUTES.MATCHES} className="text-[#28E88E] hover:underline">
-          Back to Matches
+          {t.races.back}
         </Link>
       </div>
     );
@@ -200,7 +204,7 @@ export default function RaceDetailPage() {
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          {t.races.back}
         </Link>
 
         {/* Race title block */}
@@ -246,7 +250,7 @@ export default function RaceDetailPage() {
         {analyzing && (
           <div className="flex items-center gap-3 rounded-xl border border-[#28E88E]/20 bg-[#1a2e23] p-4">
             <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#28E88E]/30 border-t-[#28E88E]" />
-            <span className="text-[#28E88E] font-inter text-sm">AI is analyzing this race…</span>
+            <span className="text-[#28E88E] font-inter text-sm">{t.races.aiAnalyzing}</span>
           </div>
         )}
         {aiError && (
@@ -257,7 +261,7 @@ export default function RaceDetailPage() {
               onClick={() => setRetryCount((c) => c + 1)}
               className="shrink-0 ml-4 px-4 py-1.5 rounded-lg bg-[#28E88E] text-[#020308] text-sm font-semibold hover:bg-[#28E88E]/90 transition"
             >
-              Retry
+              {t.races.retry}
             </button>
           </div>
         )}

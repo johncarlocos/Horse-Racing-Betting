@@ -3,11 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PrimaryLink } from "@/components/ui";
-import { ROUTES, COPY } from "@/lib/constants";
+import { ROUTES } from "@/lib/constants";
 import { useAuth } from "@/lib/context/AuthContext";
+import { useLanguage } from "@/lib/context/LanguageContext";
 
 export function HeroSection() {
   const { auth } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <div
@@ -47,25 +49,23 @@ export function HeroSection() {
 
             <section className="relative z-10 flex flex-col justify-end gap-5 order-1 px-4 pt-[38vh] min-h-[55vh] pb-6 lg:justify-center lg:pt-0 lg:px-0 lg:min-h-0 lg:pb-0">
               <h1 className="text-[50px] leading-[1.2] font-medium tracking-[0] text-white lg:text-[56px] lg:leading-[1.4] lg:whitespace-nowrap">
-                Paddock
-                <br className="lg:hidden" />
-                Horse Racing
+                {t.hero.title}
               </h1>
 
               <p className="max-w-[430px] font-inter text-[16px] font-light leading-[1.4] tracking-[0.01em] text-white lg:text-[#B3B3B3]">
-                {COPY.HERO.DESCRIPTION}
+                {t.hero.description}
               </p>
 
               <div className="mt-6 flex flex-row flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
                 {!auth?.authenticated && (
-                  <PrimaryLink href={ROUTES.LOGIN}>Log In</PrimaryLink>
+                  <PrimaryLink href={ROUTES.LOGIN}>{t.hero.login}</PrimaryLink>
                 )}
                 <Link
                   href={ROUTES.MATCHES}
                   prefetch={false}
                   className="inline-flex h-[54px] items-center justify-center rounded-full border border-white/50 bg-black/40 lg:bg-transparent px-6 py-[17px] font-inter text-[16px] font-normal leading-[1.4] tracking-[0] text-white lg:border-white/40 lg:px-8 no-underline"
                 >
-                  View Live Matches
+                  {t.hero.viewMatches}
                 </Link>
               </div>
 
@@ -76,13 +76,13 @@ export function HeroSection() {
                   <div className="flex flex-col gap-1">
                     <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">15</span>
                     <span className="whitespace-nowrap font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-[#707687]">
-                      LIVE RACES TODAY
+                      {t.hero.liveRacesToday}
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">88.3%</span>
                     <span className="whitespace-nowrap font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-[#707687]">
-                      MODEL PREDICTION ACCURACY
+                      {t.hero.modelAccuracy}
                     </span>
                   </div>
                 </div>
@@ -112,11 +112,11 @@ export function HeroSection() {
         <div className="grid grid-cols-2 gap-4 max-w-[1360px] mx-auto">
           <div className="flex flex-col items-center justify-center gap-1 text-center">
             <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">15</span>
-            <span className="font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-white">Live Races Today</span>
+            <span className="font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-white">{t.hero.liveRacesToday}</span>
           </div>
           <div className="flex flex-col items-center justify-center gap-1 text-center">
             <span className="font-sans text-[26px] font-semibold leading-[1.4] tracking-[0.01em] text-white">88.3%</span>
-            <span className="font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-white">Model Prediction Accuracy</span>
+            <span className="font-inter text-[14px] font-light leading-[1.4] tracking-[0.01em] text-white">{t.hero.modelAccuracy}</span>
           </div>
         </div>
       </section>

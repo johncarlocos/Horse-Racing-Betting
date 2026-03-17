@@ -1,4 +1,5 @@
 import type { HKJCRunner } from "@/types/race-meeting";
+import { useLanguage } from "@/lib/context/LanguageContext";
 
 type OddsTableProps = {
   runners: HKJCRunner[];
@@ -25,29 +26,30 @@ function getEv(runner: HKJCRunner): string {
 }
 
 export function OddsTable({ runners }: OddsTableProps) {
+  const { t } = useLanguage();
   const active = runners.filter((r) => r.status !== "Scratched");
 
   return (
     <div className="h-full">
-      <h2 className="font-inter text-lg font-semibold text-white mb-4">Live Odds Matrix</h2>
+      <h2 className="font-inter text-lg font-semibold text-white mb-4">{t.matches.liveOddsMatrix}</h2>
       <div className="overflow-x-auto">
         <table className="w-full font-inter text-sm">
           <thead>
             <tr className="text-white/50 text-xs">
-              <th className="text-left pb-3 pr-4 font-medium">Horse</th>
-              <th className="text-left pb-3 pr-4 font-medium">Odds</th>
-              <th className="text-left pb-3 pr-4 font-medium">Trend</th>
-              <th className="text-left pb-3 pr-4 font-medium">AI%</th>
-              <th className="text-left pb-3 pr-4 font-medium">Speed</th>
-              <th className="text-left pb-3 pr-4 font-medium">EV</th>
-              <th className="text-left pb-3 font-medium">Action</th>
+              <th className="text-left pb-3 pr-4 font-medium">{t.matches.horse}</th>
+              <th className="text-left pb-3 pr-4 font-medium">{t.matches.odds}</th>
+              <th className="text-left pb-3 pr-4 font-medium">{t.matches.trend}</th>
+              <th className="text-left pb-3 pr-4 font-medium">{t.matches.aiPct}</th>
+              <th className="text-left pb-3 pr-4 font-medium">{t.matches.speed}</th>
+              <th className="text-left pb-3 pr-4 font-medium">{t.matches.ev}</th>
+              <th className="text-left pb-3 font-medium">{t.matches.action}</th>
             </tr>
           </thead>
           <tbody>
             {active.length === 0 ? (
               <tr>
                 <td colSpan={7} className="py-8 text-center text-white/40">
-                  Select a race to view odds
+                  {t.matches.selectRace}
                 </td>
               </tr>
             ) : (
@@ -81,7 +83,7 @@ export function OddsTable({ runners }: OddsTableProps) {
                     </td>
                     <td className="py-3">
                       <span className="text-[#28E88E] text-xs font-medium cursor-pointer hover:underline">
-                        Click Here
+                        {t.matches.clickHere}
                       </span>
                     </td>
                   </tr>

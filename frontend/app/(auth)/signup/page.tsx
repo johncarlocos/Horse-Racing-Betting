@@ -7,7 +7,8 @@ import { AuthFormLayout, CheckboxField, PasswordField, TextField } from "@/compo
 import { PrimaryButton } from "@/components/ui";
 import { apiSignup } from "@/lib/api";
 import { useAuth } from "@/lib/context/AuthContext";
-import { COPY, ROUTES } from "@/lib/constants";
+import { useLanguage } from "@/lib/context/LanguageContext";
+import { ROUTES } from "@/lib/constants";
 
 type FieldErrors = {
   email?: string;
@@ -18,6 +19,7 @@ type FieldErrors = {
 export default function SignUpPage() {
   const router = useRouter();
   const { refreshAuth } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,29 +34,29 @@ export default function SignUpPage() {
     const trimmed = email.trim();
 
     if (!trimmed) {
-      errors.email = "Email is required.";
+      errors.email = t.validation.emailRequired;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      errors.email = "Please enter a valid email address.";
+      errors.email = t.validation.emailInvalid;
     }
 
     if (!password) {
-      errors.password = "Password is required.";
+      errors.password = t.validation.passwordRequired;
     } else if (password.length < 8) {
-      errors.password = "Password must be at least 8 characters.";
+      errors.password = t.validation.passwordMin;
     } else if (!/[A-Z]/.test(password)) {
-      errors.password = "Password must include an uppercase letter.";
+      errors.password = t.validation.passwordUppercase;
     } else if (!/[0-9]/.test(password)) {
-      errors.password = "Password must include a number.";
+      errors.password = t.validation.passwordNumber;
     }
 
     if (!confirmPassword) {
-      errors.confirmPassword = "Please confirm your password.";
+      errors.confirmPassword = t.validation.confirmRequired;
     } else if (password !== confirmPassword) {
-      errors.confirmPassword = "Passwords do not match.";
+      errors.confirmPassword = t.validation.confirmMismatch;
     }
 
     if (!privacyAccepted) {
-      setPrivacyError("You must accept the privacy policy to continue.");
+      setPrivacyError(t.validation.privacyRequired);
     } else {
       setPrivacyError("");
     }
@@ -89,18 +91,18 @@ export default function SignUpPage() {
   return (
     <AuthFormLayout>
       <h2 className="font-inter text-[24px] sm:text-[28px] lg:text-[32px] font-semibold text-white mb-2">
-        {COPY.AUTH.SIGNUP_TITLE}
+        {t.auth.signupTitle}
       </h2>
       <p className="font-inter text-[14px] sm:text-[16px] font-light text-[#B3B3B3] mb-6 sm:mb-8">
-        {COPY.AUTH.SIGNUP_WELCOME}
+        {t.auth.signupWelcome}
       </p>
 
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <TextField
           id="email"
-          label={COPY.AUTH.EMAIL_LABEL}
+          label={t.auth.email}
           type="email"
-          placeholder={COPY.AUTH.EMAIL_LABEL}
+          placeholder={t.auth.email}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -111,8 +113,8 @@ export default function SignUpPage() {
         />
         <PasswordField
           id="password"
-          label={COPY.AUTH.PASSWORD_LABEL}
-          placeholder={COPY.AUTH.PASSWORD_LABEL}
+          label={t.auth.password}
+          placeholder={t.auth.password}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -123,8 +125,8 @@ export default function SignUpPage() {
         />
         <PasswordField
           id="confirmPassword"
-          label={COPY.AUTH.CONFIRM_PASSWORD_LABEL}
-          placeholder={COPY.AUTH.CONFIRM_PASSWORD_LABEL}
+          label={t.auth.confirmPassword}
+          placeholder={t.auth.confirmPassword}
           value={confirmPassword}
           onChange={(e) => {
             setConfirmPassword(e.target.value);
@@ -138,14 +140,14 @@ export default function SignUpPage() {
           id="privacyPolicy"
           label={
             <span>
-              {COPY.AUTH.PRIVACY_POLICY_PREFIX}{" "}
+              {t.auth.privacyPrefix}{" "}
               <Link
                 href={ROUTES.PRIVACY_POLICY}
                 className="text-[#28E88E] underline underline-offset-2 hover:opacity-80"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Privacy Policy
+                {t.auth.privacyPolicy}
               </Link>
             </span>
           }
@@ -167,18 +169,18 @@ export default function SignUpPage() {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#020308]/30 border-t-[#020308]" />
-              Creating account…
+              {t.auth.creatingAccount}
             </span>
           ) : (
-            COPY.AUTH.SIGNUP_CTA
+            t.auth.signupCta
           )}
         </PrimaryButton>
       </form>
 
       <p className="mt-6 sm:mt-8 text-center font-inter text-[13px] sm:text-[14px] text-[#B3B3B3]">
-        {COPY.AUTH.HAVE_ACCOUNT}{" "}
+        {t.auth.haveAccount}{" "}
         <Link href={ROUTES.LOGIN} className="text-[#28E88E] font-medium no-underline hover:underline">
-          Log In
+          {t.auth.logIn}
         </Link>
       </p>
     </AuthFormLayout>

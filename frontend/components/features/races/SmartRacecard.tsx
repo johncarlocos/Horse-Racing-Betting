@@ -1,4 +1,7 @@
+"use client";
+
 import type { RacecardRow } from "@/types";
+import { useLanguage } from "@/lib/context/LanguageContext";
 
 const RANK_STYLES: Record<number, string> = {
   1: "bg-[#1a3328] border border-[#28E88E] text-white",
@@ -14,20 +17,22 @@ type SmartRacecardProps = {
 };
 
 export function SmartRacecard({ racecard }: SmartRacecardProps) {
+  const { t } = useLanguage();
+
   return (
     <section className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-3 sm:p-5 lg:p-6 h-full overflow-hidden">
-      <h2 className="font-inter text-base font-semibold text-white mb-3 sm:text-[22px] sm:mb-4">Smart Racecard</h2>
+      <h2 className="font-inter text-base font-semibold text-white mb-3 sm:text-[22px] sm:mb-4">{t.races.smartRacecard}</h2>
       <div className="overflow-hidden">
         <table className="w-full font-inter text-xs sm:text-sm">
           <thead>
             <tr className="border-b border-white/10 text-left text-white/70 align-middle">
-              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[40px]">Rank</th>
-              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px]">Horse</th>
-              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px]">Jockey</th>
-              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[50px]">Speed</th>
-              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[45px]">Class</th>
-              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[55px]">Win %</th>
-              <th className="pb-2 font-medium text-xs sm:pb-3 sm:text-[12.5px] w-[80px]">Bet Status</th>
+              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[40px]">{t.races.rank}</th>
+              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px]">{t.matches.horse}</th>
+              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px]">{t.races.jockey}</th>
+              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[50px]">{t.matches.speed}</th>
+              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[45px]">{t.matches.class}</th>
+              <th className="pb-2 pr-2 font-medium text-xs sm:pb-3 sm:pr-3 sm:text-[12.5px] w-[55px]">{t.races.winPct}</th>
+              <th className="pb-2 font-medium text-xs sm:pb-3 sm:text-[12.5px] w-[80px]">{t.races.betStatus}</th>
             </tr>
           </thead>
           <tbody>
@@ -65,7 +70,7 @@ export function SmartRacecard({ racecard }: SmartRacecardProps) {
                         : "bg-red-500/20 text-red-400 border border-red-500/40"
                     }`}
                   >
-                    {row.betStatus}
+                    {row.betStatus === "Accepting" ? t.races.accepting : t.races.closed}
                   </span>
                 </td>
               </tr>

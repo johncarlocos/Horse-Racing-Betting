@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import type { RacecardRow } from "@/types";
+import { useLanguage } from "@/lib/context/LanguageContext";
 
 const RACE_VECTOR = "/assets/race-vector.png";
 const RACE_BAR1 = "/assets/Vector-1.png";
@@ -33,12 +36,13 @@ type WinPercentageProps = {
 };
 
 export function WinPercentage({ racecard }: WinPercentageProps) {
+  const { t } = useLanguage();
   const top4 = racecard.slice(0, 4);
 
   return (
     <article className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 sm:p-5 lg:p-6 h-full">
       <h2 className="font-inter text-base font-semibold text-white mb-4 sm:text-[22px]">
-        Win Percentage
+        {t.races.winPercentage}
       </h2>
 
       <div className="relative grid grid-cols-[120px_1fr] lg:grid-cols-2 gap-0 items-center">
@@ -78,7 +82,7 @@ export function WinPercentage({ racecard }: WinPercentageProps) {
                   </span>
                   <div className="flex items-center justify-between">
                     <span className="font-inter text-[11px] text-white/50">
-                      Gold Highlight
+                      {t.races.goldHighlight}
                     </span>
                     <span className="font-inter font-semibold text-sm text-[#28E88E]">
                       {row.winPct}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MatchCard, OddsTable } from "@/components/features/matches";
+import { useLanguage } from "@/lib/context/LanguageContext";
 import type { HKJCMeeting, HKJCRace } from "@/types/race-meeting";
 
 const VENUES = [
@@ -14,6 +15,7 @@ function todayHK() {
 }
 
 export default function MatchesPage() {
+  const { t } = useLanguage();
   const [date, setDate] = useState(todayHK());
   const [venue, setVenue] = useState("ST");
   const [meeting, setMeeting] = useState<HKJCMeeting | null>(null);
@@ -70,7 +72,7 @@ export default function MatchesPage() {
           </div>
           {meeting && (
             <span className="text-white/40 text-sm">
-              {meeting.totalNumberOfRace} races · {meeting.date}
+              {meeting.totalNumberOfRace} {t.matches.races} · {meeting.date}
             </span>
           )}
         </div>
@@ -78,22 +80,19 @@ export default function MatchesPage() {
 
       {/* Content area */}
       <div className="flex-1 min-h-0 mx-auto w-full max-w-[1600px] px-3 pb-4 sm:px-6 lg:px-8">
-        {/* State feedback */}
         {loading && (
           <div className="flex items-center gap-2 text-white/50 text-sm py-4">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-[#28E88E]" />
-            Loading races…
+            {t.matches.loadingRaces}
           </div>
         )}
         {error && <p className="text-red-400 text-sm">{error}</p>}
         {!loading && !error && !meeting && (
-          <p className="text-white/40 text-sm py-4">No meeting found for this date and venue.</p>
+          <p className="text-white/40 text-sm py-4">{t.matches.noMeeting}</p>
         )}
 
-        {/* Match cards + Live Odds Matrix */}
         {meeting && meeting.races.length > 0 && (
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 h-full">
-            {/* Match cards — vertical scroll on both mobile and desktop */}
             <div className="w-full lg:w-[280px] lg:min-w-[280px] flex flex-col gap-3 overflow-y-auto lg:pb-4 lg:pr-1 scrollbar-green">
               {meeting.races.map((race, i) => (
                 <MatchCard
@@ -108,7 +107,6 @@ export default function MatchesPage() {
               ))}
             </div>
 
-            {/* Live Odds Matrix — hidden on mobile */}
             <div className="hidden lg:block flex-1 min-w-0 overflow-y-auto scrollbar-green">
               <OddsTable runners={selectedRace?.runners ?? []} />
             </div>

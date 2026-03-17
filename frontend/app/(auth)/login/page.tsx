@@ -7,11 +7,13 @@ import { AuthFormLayout, PasswordField, TextField } from "@/components/auth";
 import { PrimaryButton } from "@/components/ui";
 import { apiLogin } from "@/lib/api";
 import { useAuth } from "@/lib/context/AuthContext";
-import { COPY, ROUTES } from "@/lib/constants";
+import { useLanguage } from "@/lib/context/LanguageContext";
+import { ROUTES } from "@/lib/constants";
 
 export default function LoginPage() {
   const router = useRouter();
   const { refreshAuth } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,13 +25,13 @@ export default function LoginPage() {
     const trimmed = email.trim();
 
     if (!trimmed) {
-      errors.email = "Email is required.";
+      errors.email = t.validation.emailRequired;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      errors.email = "Please enter a valid email address.";
+      errors.email = t.validation.emailInvalid;
     }
 
     if (!password) {
-      errors.password = "Password is required.";
+      errors.password = t.validation.passwordRequired;
     }
 
     setFieldErrors(errors);
@@ -58,18 +60,18 @@ export default function LoginPage() {
   return (
     <AuthFormLayout>
       <h2 className="font-inter text-[24px] sm:text-[28px] lg:text-[32px] font-semibold text-white mb-2">
-        {COPY.AUTH.LOGIN_TITLE}
+        {t.auth.loginTitle}
       </h2>
       <p className="font-inter text-[14px] sm:text-[16px] font-light text-[#B3B3B3] mb-6 sm:mb-8">
-        {COPY.AUTH.LOGIN_WELCOME}
+        {t.auth.loginWelcome}
       </p>
 
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <TextField
           id="email"
-          label={COPY.AUTH.EMAIL_LABEL}
+          label={t.auth.email}
           type="email"
-          placeholder={COPY.AUTH.EMAIL_LABEL}
+          placeholder={t.auth.email}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -80,8 +82,8 @@ export default function LoginPage() {
         />
         <PasswordField
           id="password"
-          label={COPY.AUTH.PASSWORD_LABEL}
-          placeholder={COPY.AUTH.PASSWORD_LABEL}
+          label={t.auth.password}
+          placeholder={t.auth.password}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -101,18 +103,18 @@ export default function LoginPage() {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#020308]/30 border-t-[#020308]" />
-              Logging in…
+              {t.auth.loggingIn}
             </span>
           ) : (
-            COPY.AUTH.LOGIN_CTA
+            t.auth.loginCta
           )}
         </PrimaryButton>
       </form>
 
       <p className="mt-6 sm:mt-8 text-center font-inter text-[13px] sm:text-[14px] text-[#B3B3B3]">
-        {COPY.AUTH.NO_ACCOUNT}{" "}
+        {t.auth.noAccount}{" "}
         <Link href={ROUTES.SIGNUP} className="text-[#28E88E] font-medium no-underline hover:underline">
-          Sign Up
+          {t.auth.signUp}
         </Link>
       </p>
     </AuthFormLayout>
