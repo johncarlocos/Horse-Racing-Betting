@@ -136,6 +136,11 @@ export const zhTW = {
     members: "會員",
     noMembers: "尚無會員。",
   },
-} as const;
+};
 
-export type TranslationKeys = typeof zhTW;
+// Recursively widen literal string types to `string`
+type DeepStringify<T> = {
+  [K in keyof T]: T[K] extends string ? string : DeepStringify<T[K]>;
+};
+
+export type TranslationKeys = DeepStringify<typeof zhTW>;
