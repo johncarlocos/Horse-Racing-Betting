@@ -10,10 +10,13 @@ import { useAuth } from "@/lib/context/AuthContext";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import { ROUTES } from "@/lib/constants";
 
+const REFERRAL_OPTIONS = ["FACEBOOK", "INSTAGRAM", "THREADS"] as const;
+
 type FieldErrors = {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  referralSource?: string;
 };
 
 export default function SignUpPage() {
@@ -23,6 +26,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [referralSource, setReferralSource] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -55,6 +59,10 @@ export default function SignUpPage() {
       errors.confirmPassword = t.validation.confirmMismatch;
     }
 
+    if (!referralSource) {
+      errors.referralSource = t.validation.referralRequired;
+    }
+
     if (!privacyAccepted) {
       setPrivacyError(t.validation.privacyRequired);
     } else {
@@ -76,7 +84,13 @@ export default function SignUpPage() {
     if (!validate()) return;
 
     setLoading(true);
-    const result = await apiSignup(email.trim(), password, confirmPassword, privacyAccepted);
+    const result = await apiSignup(
+      email.trim(),
+      password,
+      confirmPassword,
+      privacyAccepted,
+      referralSource || undefined
+    );
     setLoading(false);
 
     if ("error" in result) {
@@ -135,6 +149,42 @@ export default function SignUpPage() {
           error={fieldErrors.confirmPassword}
           disabled={loading}
         />
+
+        {/* Referral Source Select */}
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="referralSource"
+            className="font-inter text-[13px] sm:text-[14px] font-medium text-[#B3B3B3]"
+          >
+            {t.auth.referralSource}
+          </label>
+          <select
+            id="referralSource"
+            value={referralSource}
+            onChange={(e) => {
+              setReferralSource(e.target.value);
+              clearField("referralSource");
+            }}
+            disabled={loading}
+            className={`w-full bg-[#1A1F2E] border rounded-lg px-4 py-3 text-white text-[14px] outline-none transition-colors focus:border-[#28E88E]/50 appearance-none ${
+              fieldErrors.referralSource ? "border-red-400" : "border-white/10"
+            }`}
+          >
+            <option value="" disabled className="text-[#B3B3B3]">
+              {t.auth.referralSource}
+            </option>
+            {REFERRAL_OPTIONS.map((opt) => (
+              <option key={opt} value={opt} className="bg-[#1A1F2E] text-white">
+                {opt}
+              </option>
+            ))}
+          </select>
+          {fieldErrors.referralSource && (
+            <p className="font-inter text-[12px] text-red-400 mt-0.5">
+              {fieldErrors.referralSource}
+            </p>
+          )}
+        </div>
 
         <CheckboxField
           id="privacyPolicy"

@@ -22,6 +22,7 @@ async def signup(body: SignupRequest, db: AsyncSession = Depends(get_db)):
         email=body.email,
         hashed_password=hash_password(body.password),
         role=UserRole.member,
+        referral_source=body.referral_source,
         privacy_policy_accepted=body.privacy_policy_accepted,
         privacy_accepted_at=datetime.now(timezone.utc) if body.privacy_policy_accepted else None,
     )
