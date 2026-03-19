@@ -98,11 +98,26 @@ export function Header({ variant = "default" }: { variant?: HeaderVariant }) {
 
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-44 rounded-xl border border-white/10 bg-[#0D1117] py-1 shadow-xl">
-                    {auth.role && (
-                      <p className="px-4 py-2 text-xs text-[#B3B3B3] border-b border-white/10 capitalize">
-                        {auth.role}
-                      </p>
-                    )}
+                    {auth.role && (() => {
+                      const roleLabels: Record<string, string> = {
+                        member: t.header.roleMember,
+                        admin: t.header.roleAdmin,
+                        subadmin: t.header.roleSubadmin,
+                      };
+                      const vipDays = auth.vip_expiry_date
+                        ? Math.ceil((new Date(auth.vip_expiry_date).getTime() - Date.now()) / 86400000)
+                        : 0;
+                      return (
+                        <div className="px-4 py-2 flex items-center gap-2 border-b border-white/10">
+                          <span className="text-xs text-[#B3B3B3]">{roleLabels[auth.role] ?? auth.role}</span>
+                          {vipDays > 0 && (
+                            <span className="bg-[#28E88E] text-[#020308] text-[10px] font-bold px-1.5 py-0.5 rounded">
+                              VIP {vipDays}{locale === "zh-TW" ? "天" : "d"}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })()}
                     {isManager && (
                       <Link
                         href={manageHref}

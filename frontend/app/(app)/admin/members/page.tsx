@@ -20,16 +20,26 @@ type EditForm = {
   password: string;
   age_range: string;
   price: string;
-  vip_expiry_date: string;
+  isVip: boolean;
+  vipDuration: string;
 };
 
 type AddMemberForm = {
   email: string;
   password: string;
   referral_source: string;
+  isVip: boolean;
+  vipDuration: string;
 };
 
 const REFERRAL_OPTIONS = ["FACEBOOK", "INSTAGRAM", "THREADS"] as const;
+const VIP_DURATIONS = [
+  { value: "3", labelKey: "days3" },
+  { value: "15", labelKey: "days15" },
+  { value: "30", labelKey: "days30" },
+  { value: "90", labelKey: "days90" },
+  { value: "365", labelKey: "days365" },
+] as const;
 const ROWS_PER_PAGE = 10;
 
 function formatDate(iso: string, locale: string) {
@@ -58,6 +68,12 @@ function daysUntil(iso: string): number | null {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
+function computeVipExpiry(days: string): string {
+  const d = new Date();
+  d.setDate(d.getDate() + Number(days));
+  return d.toISOString();
+}
+
 function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
   if (!open) return null;
   return (
@@ -72,15 +88,61 @@ function Modal({ open, onClose, children }: { open: boolean; onClose: () => void
   );
 }
 
+/* Eye icon SVGs */
+const EyeOpen = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+);
+const EyeClosed = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+  </svg>
+);
+
+function PasswordInput({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  className: string;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        type={show ? "text" : "password"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={className}
+      />
+      <button
+        type="button"
+        onClick={() => setShow((s) => !s)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#B3B3B3] hover:text-white"
+      >
+        {show ? <EyeOpen /> : <EyeClosed />}
+      </button>
+    </div>
+  );
+}
+
 export default function MembersPage() {
   const { t, locale } = useLanguage();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [search, setSearch] = useState("");
+  const [vipFilter, setVipFilter] = useState(false);
   const [page, setPage] = useState(1);
   const [showAdd, setShowAdd] = useState(false);
-  const [addForm, setAddForm] = useState<AddMemberForm>({ email: "", password: "", referral_source: "" });
+  const [addForm, setAddForm] = useState<AddMemberForm>({ email: "", password: "", referral_source: "", isVip: false, vipDuration: "30" });
   const [editingMember, setEditingMember] = useState<UserRow | null>(null);
-  const [editForm, setEditForm] = useState<EditForm>({ email: "", password: "", age_range: "", price: "", vip_expiry_date: "" });
+  const [editForm, setEditForm] = useState<EditForm>({ email: "", password: "", age_range: "", price: "", isVip: false, vipDuration: "30" });
   const [deletingUser, setDeletingUser] = useState<UserRow | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -95,14 +157,18 @@ export default function MembersPage() {
   const members = useMemo(() => users.filter((u) => u.role === "member"), [users]);
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return members;
+    let list = members;
+    if (vipFilter) {
+      list = list.filter((u) => u.vip_expiry_date && daysUntil(u.vip_expiry_date) != null);
+    }
+    if (!search.trim()) return list;
     const q = search.toLowerCase();
-    return members.filter(
+    return list.filter(
       (u) =>
         u.email.toLowerCase().includes(q) ||
         (u.referral_source && u.referral_source.toLowerCase().includes(q))
     );
-  }, [members, search]);
+  }, [members, search, vipFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ROWS_PER_PAGE));
   const paged = filtered.slice((page - 1) * ROWS_PER_PAGE, page * ROWS_PER_PAGE);
@@ -121,6 +187,7 @@ export default function MembersPage() {
         password: addForm.password,
         role: "member",
         referral_source: addForm.referral_source || undefined,
+        vip_expiry_date: addForm.isVip ? computeVipExpiry(addForm.vipDuration) : undefined,
       }),
     });
     setLoading(false);
@@ -130,18 +197,20 @@ export default function MembersPage() {
       return;
     }
     setShowAdd(false);
-    setAddForm({ email: "", password: "", referral_source: "" });
+    setAddForm({ email: "", password: "", referral_source: "", isVip: false, vipDuration: "30" });
     fetchUsers();
   };
 
   const openEdit = (u: UserRow) => {
+    const hasVip = u.vip_expiry_date && daysUntil(u.vip_expiry_date) != null;
     setEditingMember(u);
     setEditForm({
       email: u.email,
       password: "",
       age_range: u.age_range ?? "",
       price: u.price != null ? String(u.price) : "",
-      vip_expiry_date: u.vip_expiry_date ? u.vip_expiry_date.slice(0, 10) : "",
+      isVip: !!hasVip,
+      vipDuration: "30",
     });
     setError("");
   };
@@ -157,8 +226,17 @@ export default function MembersPage() {
     if (editForm.age_range !== (editingMember.age_range ?? "")) body.age_range = editForm.age_range || null;
     if (editForm.price !== (editingMember.price != null ? String(editingMember.price) : ""))
       body.price = editForm.price ? Number(editForm.price) : null;
-    if (editForm.vip_expiry_date !== (editingMember.vip_expiry_date ? editingMember.vip_expiry_date.slice(0, 10) : ""))
-      body.vip_expiry_date = editForm.vip_expiry_date || null;
+
+    // VIP: if checkbox is on, set expiry from duration; if off, clear it
+    const hadVip = editingMember.vip_expiry_date && daysUntil(editingMember.vip_expiry_date) != null;
+    if (editForm.isVip && !hadVip) {
+      body.vip_expiry_date = computeVipExpiry(editForm.vipDuration);
+    } else if (editForm.isVip && hadVip) {
+      // Only update if duration was explicitly changed (re-send new expiry)
+      body.vip_expiry_date = computeVipExpiry(editForm.vipDuration);
+    } else if (!editForm.isVip && hadVip) {
+      body.vip_expiry_date = null;
+    }
 
     const res = await fetch(`/api/users/${editingMember.id}`, {
       method: "PATCH",
@@ -184,6 +262,9 @@ export default function MembersPage() {
     fetchUsers();
   };
 
+  // Type helper for duration label keys
+  const durationLabel = (key: string) => t.admin[key as keyof typeof t.admin] ?? key;
+
   return (
     <div>
       {/* Header */}
@@ -197,7 +278,7 @@ export default function MembersPage() {
         </button>
       </div>
 
-      {/* Search */}
+      {/* Search + VIP filter */}
       <div className="flex items-center gap-3 mb-4">
         <div className="relative flex-1 max-w-md">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#B3B3B3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,6 +292,16 @@ export default function MembersPage() {
             className="w-full bg-[#1A1F2E] border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-[#666] outline-none focus:border-[#28E88E]/50"
           />
         </div>
+        <button
+          onClick={() => { setVipFilter((v) => !v); setPage(1); }}
+          className={`px-3 py-2 rounded-lg text-xs font-bold transition border ${
+            vipFilter
+              ? "bg-[#28E88E] text-[#020308] border-[#28E88E]"
+              : "bg-[#1A1F2E] text-[#B3B3B3] border-white/10 hover:border-white/20"
+          }`}
+        >
+          {t.admin.vip}
+        </button>
       </div>
 
       {/* Table */}
@@ -286,7 +377,7 @@ export default function MembersPage() {
         </button>
       </div>
 
-      {/* Add Member Modal */}
+      {/* ═══ Add Member Modal ═══ */}
       <Modal open={showAdd} onClose={() => setShowAdd(false)}>
         <h3 className="text-lg font-semibold mb-4">{t.admin.add}</h3>
         <div className="flex flex-col gap-4">
@@ -296,7 +387,7 @@ export default function MembersPage() {
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[#B3B3B3]">{t.admin.password}</label>
-            <input type="password" value={addForm.password} onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))} className={inputClass} />
+            <PasswordInput value={addForm.password} onChange={(v) => setAddForm((f) => ({ ...f, password: v }))} className={inputClass + " pr-10"} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[#B3B3B3]">{t.admin.referralSource}</label>
@@ -305,6 +396,30 @@ export default function MembersPage() {
               {REFERRAL_OPTIONS.map((opt) => (<option key={opt} value={opt}>{opt}</option>))}
             </select>
           </div>
+
+          {/* VIP checkbox + duration */}
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={addForm.isVip}
+                onChange={(e) => setAddForm((f) => ({ ...f, isVip: e.target.checked }))}
+                className="w-4 h-4 accent-[#28E88E]"
+              />
+              <span className="text-sm text-white">{t.admin.setVip}</span>
+            </label>
+          </div>
+          {addForm.isVip && (
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-[#B3B3B3]">{t.admin.vipDuration}</label>
+              <select value={addForm.vipDuration} onChange={(e) => setAddForm((f) => ({ ...f, vipDuration: e.target.value }))} className={inputClass}>
+                {VIP_DURATIONS.map((d) => (
+                  <option key={d.value} value={d.value}>{durationLabel(d.labelKey)}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <div className="flex justify-end gap-3 mt-2">
             <button onClick={() => setShowAdd(false)} className="text-sm text-[#B3B3B3] hover:text-white">{t.admin.cancel}</button>
@@ -313,7 +428,7 @@ export default function MembersPage() {
         </div>
       </Modal>
 
-      {/* Edit Member Modal */}
+      {/* ═══ Edit Member Modal ═══ */}
       <Modal open={!!editingMember} onClose={() => setEditingMember(null)}>
         <h3 className="text-lg font-semibold mb-4">{t.admin.edit}</h3>
         <div className="flex flex-col gap-4">
@@ -323,7 +438,7 @@ export default function MembersPage() {
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[#B3B3B3]">{t.admin.password}</label>
-            <input type="password" value={editForm.password} onChange={(e) => setEditForm((f) => ({ ...f, password: e.target.value }))} placeholder="••••••••" className={inputClass} />
+            <PasswordInput value={editForm.password} onChange={(v) => setEditForm((f) => ({ ...f, password: v }))} placeholder="••••••••" className={inputClass + " pr-10"} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[#B3B3B3]">{t.admin.ageRange}</label>
@@ -340,10 +455,30 @@ export default function MembersPage() {
             <label className="text-sm text-[#B3B3B3]">{t.admin.price}</label>
             <input type="number" value={editForm.price} onChange={(e) => setEditForm((f) => ({ ...f, price: e.target.value }))} className={inputClass} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-[#B3B3B3]">{t.admin.date}</label>
-            <input type="date" value={editForm.vip_expiry_date} onChange={(e) => setEditForm((f) => ({ ...f, vip_expiry_date: e.target.value }))} className={inputClass} />
+
+          {/* VIP checkbox + duration */}
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={editForm.isVip}
+                onChange={(e) => setEditForm((f) => ({ ...f, isVip: e.target.checked }))}
+                className="w-4 h-4 accent-[#28E88E]"
+              />
+              <span className="text-sm text-white">{t.admin.setVip}</span>
+            </label>
           </div>
+          {editForm.isVip && (
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-[#B3B3B3]">{t.admin.vipDuration}</label>
+              <select value={editForm.vipDuration} onChange={(e) => setEditForm((f) => ({ ...f, vipDuration: e.target.value }))} className={inputClass}>
+                {VIP_DURATIONS.map((d) => (
+                  <option key={d.value} value={d.value}>{durationLabel(d.labelKey)}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <div className="flex justify-end gap-3 mt-2">
             <button onClick={() => setEditingMember(null)} className="text-sm text-[#B3B3B3] hover:text-white">{t.admin.cancel}</button>
@@ -352,7 +487,7 @@ export default function MembersPage() {
         </div>
       </Modal>
 
-      {/* Delete Confirm Modal */}
+      {/* ═══ Delete Confirm Modal ═══ */}
       <Modal open={!!deletingUser} onClose={() => setDeletingUser(null)}>
         <h3 className="text-lg font-semibold mb-4">{t.admin.delete}</h3>
         <p className="text-[#B3B3B3] text-sm mb-6">{t.admin.confirmDelete}</p>

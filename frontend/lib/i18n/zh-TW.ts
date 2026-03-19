@@ -3,6 +3,9 @@ export const zhTW = {
   header: {
     manage: "管理",
     logout: "登出",
+    roleMember: "會員",
+    roleAdmin: "管理員",
+    roleSubadmin: "副管理員",
   },
 
   // Hero / Landing
@@ -156,6 +159,15 @@ export const zhTW = {
     page: "頁面",
     daysLeft: "天",
     back: "返回",
+    vip: "VIP",
+    vipOnly: "僅顯示VIP",
+    setVip: "設為VIP",
+    vipDuration: "VIP時長",
+    days3: "3天",
+    days15: "15天",
+    days30: "30天",
+    days90: "90天",
+    days365: "365天",
   },
   subadmin: {
     dashboard: "副管理員儀表板",

@@ -5,6 +5,9 @@ export const en: TranslationKeys = {
   header: {
     manage: "Manage",
     logout: "Log Out",
+    roleMember: "Member",
+    roleAdmin: "Admin",
+    roleSubadmin: "Subadmin",
   },
 
   // Hero / Landing
@@ -158,6 +161,15 @@ export const en: TranslationKeys = {
     page: "Page",
     daysLeft: "days",
     back: "Back",
+    vip: "VIP",
+    vipOnly: "VIP Only",
+    setVip: "Set as VIP",
+    vipDuration: "VIP Duration",
+    days3: "3 days",
+    days15: "15 days",
+    days30: "30 days",
+    days90: "90 days",
+    days365: "365 days",
   },
   subadmin: {
     dashboard: "Subadmin Dashboard",

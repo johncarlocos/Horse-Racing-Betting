@@ -2,7 +2,11 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-type AuthState = { authenticated: boolean; role?: string } | null;
+type AuthState = {
+  authenticated: boolean;
+  role?: string;
+  vip_expiry_date?: string | null;
+} | null;
 
 type AuthContextValue = {
   auth: AuthState;
