@@ -170,6 +170,12 @@ export const en: TranslationKeys = {
     days30: "30 days",
     days90: "90 days",
     days365: "365 days",
+    analytics: "Analytics",
+    totalUsers: "Total Users",
+    vipUsers: "VIP Users",
+    dailyIncome: "Daily Income",
+    selectDate: "Select Date",
+    noIncome: "No income",
   },
   subadmin: {
     dashboard: "Subadmin Dashboard",

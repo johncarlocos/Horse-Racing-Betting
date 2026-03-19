@@ -18,7 +18,7 @@ type UserRow = {
 type EditForm = {
   email: string;
   password: string;
-  age_range: string;
+  referral_source: string;
   price: string;
   isVip: boolean;
   vipDuration: string;
@@ -28,6 +28,7 @@ type AddMemberForm = {
   email: string;
   password: string;
   referral_source: string;
+  price: string;
   isVip: boolean;
   vipDuration: string;
 };
@@ -140,9 +141,9 @@ export default function MembersPage() {
   const [vipFilter, setVipFilter] = useState(false);
   const [page, setPage] = useState(1);
   const [showAdd, setShowAdd] = useState(false);
-  const [addForm, setAddForm] = useState<AddMemberForm>({ email: "", password: "", referral_source: "", isVip: false, vipDuration: "30" });
+  const [addForm, setAddForm] = useState<AddMemberForm>({ email: "", password: "", referral_source: "", price: "", isVip: false, vipDuration: "30" });
   const [editingMember, setEditingMember] = useState<UserRow | null>(null);
-  const [editForm, setEditForm] = useState<EditForm>({ email: "", password: "", age_range: "", price: "", isVip: false, vipDuration: "30" });
+  const [editForm, setEditForm] = useState<EditForm>({ email: "", password: "", referral_source: "", price: "", isVip: false, vipDuration: "30" });
   const [deletingUser, setDeletingUser] = useState<UserRow | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -187,6 +188,7 @@ export default function MembersPage() {
         password: addForm.password,
         role: "member",
         referral_source: addForm.referral_source || undefined,
+        price: addForm.price ? Number(addForm.price) : undefined,
         vip_expiry_date: addForm.isVip ? computeVipExpiry(addForm.vipDuration) : undefined,
       }),
     });
@@ -197,20 +199,26 @@ export default function MembersPage() {
       return;
     }
     setShowAdd(false);
-    setAddForm({ email: "", password: "", referral_source: "", isVip: false, vipDuration: "30" });
+    setAddForm({ email: "", password: "", referral_source: "", price: "", isVip: false, vipDuration: "30" });
     fetchUsers();
   };
 
   const openEdit = (u: UserRow) => {
-    const hasVip = u.vip_expiry_date && daysUntil(u.vip_expiry_date) != null;
+    const remaining = u.vip_expiry_date ? daysUntil(u.vip_expiry_date) : null;
+    const hasVip = remaining != null;
+    // Find closest matching duration option
+    const durations = [3, 15, 30, 90, 365];
+    const closestDuration = hasVip
+      ? String(durations.reduce((prev, curr) => Math.abs(curr - remaining!) < Math.abs(prev - remaining!) ? curr : prev))
+      : "30";
     setEditingMember(u);
     setEditForm({
       email: u.email,
       password: "",
-      age_range: u.age_range ?? "",
+      referral_source: u.referral_source ?? "",
       price: u.price != null ? String(u.price) : "",
-      isVip: !!hasVip,
-      vipDuration: "30",
+      isVip: hasVip,
+      vipDuration: closestDuration,
     });
     setError("");
   };
@@ -223,7 +231,7 @@ export default function MembersPage() {
     const body: Record<string, unknown> = {};
     if (editForm.email && editForm.email !== editingMember.email) body.email = editForm.email;
     if (editForm.password) body.password = editForm.password;
-    if (editForm.age_range !== (editingMember.age_range ?? "")) body.age_range = editForm.age_range || null;
+    if (editForm.referral_source !== (editingMember.referral_source ?? "")) body.referral_source = editForm.referral_source || null;
     if (editForm.price !== (editingMember.price != null ? String(editingMember.price) : ""))
       body.price = editForm.price ? Number(editForm.price) : null;
 
@@ -390,11 +398,15 @@ export default function MembersPage() {
             <PasswordInput value={addForm.password} onChange={(v) => setAddForm((f) => ({ ...f, password: v }))} className={inputClass + " pr-10"} />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-[#B3B3B3]">{t.admin.referralSource}</label>
+            <label className="text-sm text-[#B3B3B3]">{t.auth.referralSource}</label>
             <select value={addForm.referral_source} onChange={(e) => setAddForm((f) => ({ ...f, referral_source: e.target.value }))} className={inputClass}>
-              <option value="">{t.admin.referralSource}</option>
+              <option value="">{t.auth.referralSource}</option>
               {REFERRAL_OPTIONS.map((opt) => (<option key={opt} value={opt}>{opt}</option>))}
             </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-[#B3B3B3]">{t.admin.price}</label>
+            <input type="number" value={addForm.price} onChange={(e) => setAddForm((f) => ({ ...f, price: e.target.value }))} className={inputClass} />
           </div>
 
           {/* VIP checkbox + duration */}
@@ -441,14 +453,10 @@ export default function MembersPage() {
             <PasswordInput value={editForm.password} onChange={(v) => setEditForm((f) => ({ ...f, password: v }))} placeholder="••••••••" className={inputClass + " pr-10"} />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-[#B3B3B3]">{t.admin.ageRange}</label>
-            <select value={editForm.age_range} onChange={(e) => setEditForm((f) => ({ ...f, age_range: e.target.value }))} className={inputClass}>
-              <option value="">{t.admin.ageRange}</option>
-              <option value="18-25">18-25</option>
-              <option value="26-35">26-35</option>
-              <option value="36-45">36-45</option>
-              <option value="46-55">46-55</option>
-              <option value="56+">56+</option>
+            <label className="text-sm text-[#B3B3B3]">{t.auth.referralSource}</label>
+            <select value={editForm.referral_source} onChange={(e) => setEditForm((f) => ({ ...f, referral_source: e.target.value }))} className={inputClass}>
+              <option value="">{t.auth.referralSource}</option>
+              {REFERRAL_OPTIONS.map((opt) => (<option key={opt} value={opt}>{opt}</option>))}
             </select>
           </div>
           <div className="flex flex-col gap-1">

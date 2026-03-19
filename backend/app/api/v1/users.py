@@ -1,12 +1,13 @@
 import uuid
+from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db, require_admin, require_admin_or_subadmin
 from app.core.security import hash_password
-from app.models.user import User, UserRole
+from app.models.user import ReferralSource, User, UserRole
 from app.schemas.auth import CreateUserRequest, UpdateUserRequest, UserResponse
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -56,6 +57,52 @@ async def list_users(
     if current_user.role == UserRole.subadmin:
         users = [u for u in users if u.role == UserRole.member]
     return users
+
+
+@router.get("/analytics")
+async def user_analytics(
+    date: str = Query(default=None),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_admin_or_subadmin),
+):
+    """Return referral source stats and daily income for a given date."""
+    result = await db.execute(
+        select(User).where(User.role == UserRole.member)
+    )
+    members = result.scalars().all()
+
+    now = datetime.now(timezone.utc)
+
+    # Count by referral source
+    sources = {}
+    for src in ReferralSource:
+        src_members = [m for m in members if m.referral_source == src]
+        vip_members = [
+            m for m in src_members
+            if m.vip_expiry_date and m.vip_expiry_date > now
+        ]
+        sources[src.value] = {
+            "total": len(src_members),
+            "vip": len(vip_members),
+        }
+
+    # Daily income: sum of `price` for VIP users created on the given date
+    # Convert created_at to HK time (UTC+8) to match the frontend display
+    hk_tz = timezone(timedelta(hours=8))
+    target_date = date or datetime.now(hk_tz).strftime("%Y-%m-%d")
+    daily_income = 0.0
+    for m in members:
+        if m.created_at:
+            created_hk = m.created_at.astimezone(hk_tz).strftime("%Y-%m-%d")
+            if created_hk == target_date:
+                if m.vip_expiry_date and m.vip_expiry_date > now and m.price:
+                    daily_income += m.price
+
+    return {
+        "sources": sources,
+        "date": target_date,
+        "daily_income": daily_income,
+    }
 
 
 @router.patch("/{user_id}", response_model=UserResponse)

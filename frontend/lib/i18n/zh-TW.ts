@@ -168,6 +168,12 @@ export const zhTW = {
     days30: "30天",
     days90: "90天",
     days365: "365天",
+    analytics: "數據分析",
+    totalUsers: "總用戶",
+    vipUsers: "VIP用戶",
+    dailyIncome: "當日收入",
+    selectDate: "選擇日期",
+    noIncome: "無收入",
   },
   subadmin: {
     dashboard: "副管理員儀表板",
